@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Schedule } from '../schedule/schedule.entity';
 
 interface MovieCreationAttrs {
 	name: string;
@@ -20,4 +21,7 @@ export class Movie extends Model<Movie, MovieCreationAttrs> {
 
 	@Column({ type: DataType.STRING })
 	discription: string;
+
+	@HasMany(() => Schedule)
+	schedule: Schedule[];
 }

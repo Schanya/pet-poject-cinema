@@ -3,6 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { HallModule } from './hall/hall.module';
 import { MovieModule } from './movie/movie.module';
 import { RoleModule } from './role/role.module';
+import { ScheduleModule } from './schedule/schedule.module';
 import { SchemaModule } from './schema/schema.module';
 import { UserModule } from './user/user.module';
 
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
 		MovieModule,
 		HallModule,
 		SchemaModule,
+		ScheduleModule,
 	],
 })
 export class CoreModule {}

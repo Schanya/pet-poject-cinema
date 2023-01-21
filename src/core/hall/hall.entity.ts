@@ -1,4 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Schedule } from '../schedule/schedule.entity';
 import { Schema } from '../schema/schema.entity';
 
 interface HallCreationAttrs {
@@ -20,4 +21,7 @@ export class Hall extends Model<Hall, HallCreationAttrs> {
 
 	@HasMany(() => Schema)
 	schemas: Schema[];
+
+	@HasMany(() => Schedule)
+	schedule: Schedule[];
 }
