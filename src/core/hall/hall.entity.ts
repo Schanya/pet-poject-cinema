@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Schema } from '../schema/schema.entity';
 
 interface HallCreationAttrs {
 	name: string;
@@ -16,4 +17,7 @@ export class Hall extends Model<Hall, HallCreationAttrs> {
 
 	@Column({ type: DataType.STRING, allowNull: false })
 	name: string;
+
+	@HasMany(() => Schema)
+	schemas: Schema[];
 }
