@@ -5,6 +5,7 @@ import { MovieModule } from './movie/movie.module';
 import { RoleModule } from './role/role.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { SchemaModule } from './schema/schema.module';
+import { TicketModule } from './ticket/ticket.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
 		HallModule,
 		SchemaModule,
 		ScheduleModule,
+		TicketModule,
 	],
 })
 export class CoreModule {}

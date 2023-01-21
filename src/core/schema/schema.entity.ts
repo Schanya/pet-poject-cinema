@@ -2,10 +2,12 @@ import {
 	Column,
 	DataType,
 	ForeignKey,
+	HasMany,
 	Model,
 	Table,
 } from 'sequelize-typescript';
 import { Hall } from '../hall/hall.entity';
+import { Ticket } from '../ticket/ticket.entity';
 
 interface SchemaCreationAttrs {
 	place: number;
@@ -32,4 +34,7 @@ export class Schema extends Model<Schema, SchemaCreationAttrs> {
 	@ForeignKey(() => Hall)
 	@Column({ type: DataType.INTEGER })
 	hallId: number;
+
+	@HasMany(() => Ticket)
+	tickets: Ticket[];
 }

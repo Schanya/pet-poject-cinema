@@ -11,7 +11,7 @@ import {
 import { SchemaDto } from './dto/schema.dto';
 import { SchemaService } from './schema.service';
 
-@Controller('Schema')
+@Controller('schema')
 export class SchemaController {
 	constructor(readonly schemaService: SchemaService) {}
 
