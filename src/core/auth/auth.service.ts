@@ -5,6 +5,7 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Transaction } from 'sequelize';
 
 import { hash, compare } from '../helpers/hash';
 import { UserDto } from '../user/dto/user.dto';
@@ -27,7 +28,7 @@ export class AuthService {
 		throw new NotFoundException('Uncorrect email or password');
 	}
 
-	async registration(userDto: UserDto) {
+	async registration(userDto: UserDto, transaction: Transaction) {
 		const candidate = await this.userService.findBy({ email: userDto.email });
 
 		if (candidate) {
@@ -39,10 +40,13 @@ export class AuthService {
 
 		const hashPassword = hash(userDto.password);
 
-		const user = await this.userService.create({
-			...userDto,
-			password: hashPassword,
-		});
+		const user = await this.userService.create(
+			{
+				...userDto,
+				password: hashPassword,
+			},
+			transaction,
+		);
 
 		return user;
 	}

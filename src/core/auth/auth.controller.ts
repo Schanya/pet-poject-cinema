@@ -11,6 +11,8 @@ import { AuthService } from './auth.service';
 
 import { LocalAuthGuard } from './guards';
 import { TransactionInterceptor } from '../helpers/interceptors/transaction.interceptor';
+import { TransactionParam } from '../helpers/interceptors/transaction.decarator';
+import { Transaction } from 'sequelize';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +26,10 @@ export class AuthController {
 
 	@UseInterceptors(TransactionInterceptor)
 	@Post('sign-up')
-	async registration(@Body() userDto: UserDto) {
-		return await this.authService.registration(userDto);
+	async registration(
+		@Body() userDto: UserDto,
+		@TransactionParam() transaction: Transaction,
+	) {
+		return await this.authService.registration(userDto, transaction);
 	}
 }
