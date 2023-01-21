@@ -2,12 +2,14 @@ import {
 	Column,
 	DataType,
 	ForeignKey,
+	HasMany,
 	Model,
 	Table,
 } from 'sequelize-typescript';
 import { Timestamp } from 'typeorm';
 import { Hall } from '../hall/hall.entity';
 import { Movie } from '../movie/movie.entity';
+import { Ticket } from '../ticket/ticket.entity';
 
 interface ScheduleCreationAttrs {
 	date: Date;
@@ -35,4 +37,7 @@ export class Schedule extends Model<Schedule, ScheduleCreationAttrs> {
 	@ForeignKey(() => Hall)
 	@Column({ type: DataType.INTEGER })
 	hallId: number;
+
+	@HasMany(() => Ticket)
+	tickets: Ticket[];
 }
