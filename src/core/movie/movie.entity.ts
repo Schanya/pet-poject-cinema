@@ -6,7 +6,7 @@ interface MovieCreationAttrs {
 	discroption: string;
 }
 
-@Table({ tableName: 'movies' })
+@Table({ tableName: 'movies', paranoid: true })
 export class Movie extends Model<Movie, MovieCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,
@@ -16,11 +16,14 @@ export class Movie extends Model<Movie, MovieCreationAttrs> {
 	})
 	id: number;
 
-	@Column({ type: DataType.STRING, allowNull: false })
+	@Column({ type: DataType.STRING, allowNull: false, unique: true })
 	name: string;
 
 	@Column({ type: DataType.STRING })
 	discription: string;
+
+	@Column({ type: DataType.INTEGER, allowNull: false })
+	duration: number;
 
 	@HasMany(() => Schedule)
 	schedule: Schedule[];

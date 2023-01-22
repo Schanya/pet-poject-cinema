@@ -26,8 +26,8 @@ export class MovieController {
 	}
 
 	@Put(':id')
-	async update(@Param('id') id: number, @Body() moviDto: MovieDto) {
-		return await this.movieService.update(id, moviDto);
+	async update(@Param('id') id: number, @Body() movieDto: MovieDto) {
+		return await this.movieService.update(id, movieDto);
 	}
 
 	@Delete(':id')
