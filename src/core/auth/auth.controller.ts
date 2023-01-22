@@ -4,6 +4,8 @@ import {
 	Body,
 	UseGuards,
 	UseInterceptors,
+	Res,
+	HttpStatus,
 } from '@nestjs/common';
 
 import { UserDto } from '../user/dto/user.dto';
@@ -13,6 +15,7 @@ import { LocalAuthGuard } from './guards';
 import { TransactionInterceptor } from '../helpers/interceptors/transaction.interceptor';
 import { TransactionParam } from '../helpers/interceptors/transaction.decarator';
 import { Transaction } from 'sequelize';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -20,8 +23,10 @@ export class AuthController {
 
 	@UseGuards(LocalAuthGuard)
 	@Post('sign-in')
-	async login(@Body() userDto: UserDto) {
-		return await this.authService.login(userDto);
+	async login(@Body() userDto: UserDto, @Res() res: Response) {
+		const token = await this.authService.login(userDto);
+
+		res.status(HttpStatus.OK).send(token);
 	}
 
 	@UseInterceptors(TransactionInterceptor)
@@ -29,7 +34,12 @@ export class AuthController {
 	async registration(
 		@Body() userDto: UserDto,
 		@TransactionParam() transaction: Transaction,
+		@Res() res: Response,
 	) {
-		return await this.authService.registration(userDto, transaction);
+		const user = await this.authService.registration(userDto, transaction);
+
+		res
+			.status(HttpStatus.OK)
+			.send(`User ${user.email} registered successfully`);
 	}
 }
