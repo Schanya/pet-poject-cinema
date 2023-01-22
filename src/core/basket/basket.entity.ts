@@ -8,7 +8,12 @@ import {
 import { Ticket } from '../ticket/ticket.entity';
 import { User } from '../user/user.entity';
 
-@Table({ tableName: 'basket', createdAt: false, updatedAt: false })
+@Table({
+	tableName: 'basket',
+	createdAt: false,
+	updatedAt: false,
+	paranoid: true,
+})
 export class Basket extends Model<Basket> {
 	@Column({
 		type: DataType.INTEGER,

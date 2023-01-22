@@ -15,7 +15,7 @@ interface SchemaCreationAttrs {
 	hallId: number;
 }
 
-@Table({ tableName: 'schemas' })
+@Table({ tableName: 'schemas', paranoid: true })
 export class Schema extends Model<Schema, SchemaCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,
@@ -28,7 +28,7 @@ export class Schema extends Model<Schema, SchemaCreationAttrs> {
 	@Column({ type: DataType.INTEGER, allowNull: false })
 	place: number;
 
-	@Column({ type: DataType.INTEGER, allowNull: false })
+	@Column({ type: DataType.INTEGER, allowNull: false, unique: true })
 	row: number;
 
 	@ForeignKey(() => Hall)

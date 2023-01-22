@@ -14,7 +14,7 @@ interface RequestedSeatCreationAttrs {
 	scheduleId: number;
 }
 
-@Table({ tableName: 'requsted_seats' })
+@Table({ tableName: 'requsted_seats', paranoid: true })
 export class RequestedSeat extends Model<RequestedSeatCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,

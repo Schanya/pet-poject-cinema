@@ -17,7 +17,7 @@ interface ScheduleCreationAttrs {
 	hallId: number;
 }
 
-@Table({ tableName: 'schedule' })
+@Table({ tableName: 'schedule', paranoid: true })
 export class Schedule extends Model<Schedule, ScheduleCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,

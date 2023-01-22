@@ -14,7 +14,7 @@ interface TicketCreationAttrs {
 	scheduleId: number;
 }
 
-@Table({ tableName: 'tickets' })
+@Table({ tableName: 'tickets', paranoid: true })
 export class Ticket extends Model<Ticket, TicketCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,

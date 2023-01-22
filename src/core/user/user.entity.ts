@@ -13,7 +13,7 @@ interface UserCreationAttrs {
 	password: string;
 }
 
-@Table({ tableName: 'users' })
+@Table({ tableName: 'users', paranoid: true })
 export class User extends Model<User, UserCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,
@@ -23,7 +23,7 @@ export class User extends Model<User, UserCreationAttrs> {
 	})
 	id: number;
 
-	@Column({ type: DataType.STRING, allowNull: false })
+	@Column({ type: DataType.STRING, allowNull: false, unique: true })
 	email: string;
 
 	@Column({ type: DataType.STRING, allowNull: false })
