@@ -15,7 +15,7 @@ export class UserService {
 	) {}
 
 	public async findBy(options: any): Promise<User> {
-		return this.userRepository.findOne({
+		return await this.userRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
@@ -23,13 +23,13 @@ export class UserService {
 
 	public async create(
 		userDto: UserDto,
-		transaction?: Transaction,
+		transaction: Transaction,
 	): Promise<User> {
 		const user = await this.userRepository.create(userDto, { transaction });
 
 		const role = await this.roleService.findBy({ name: 'USER' });
 
-		user.$set('roles', [role.id], { transaction });
+		await user.$set('roles', [role.id], { transaction });
 		user.roles = [role];
 
 		return user;

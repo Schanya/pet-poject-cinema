@@ -23,7 +23,7 @@ export class AuthService {
 		const user = await this.userService.findBy({ email: userDto.email });
 
 		if (user && compare(userDto.password, user.password))
-			return await this.userService.findBy(user.id);
+			return await this.userService.findBy({ id: user.id });
 
 		throw new NotFoundException('Uncorrect email or password');
 	}

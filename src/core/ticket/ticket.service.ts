@@ -9,7 +9,7 @@ export class TicketService {
 	constructor(@InjectModel(Ticket) private ticketRepository: typeof Ticket) {}
 
 	public async findBy(options: any): Promise<Ticket> {
-		return this.ticketRepository.findOne({
+		return await this.ticketRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
@@ -28,6 +28,6 @@ export class TicketService {
 	}
 
 	public async delete(id: string): Promise<any> {
-		return this.ticketRepository.destroy({ where: { id } });
+		return await this.ticketRepository.destroy({ where: { id } });
 	}
 }

@@ -9,16 +9,14 @@ export class HallService {
 	constructor(@InjectModel(Hall) private hallRepository: typeof Hall) {}
 
 	public async findBy(options: any): Promise<Hall> {
-		return this.hallRepository.findOne({
+		return await this.hallRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
 	}
 
 	public async create(hallDto: HallDto): Promise<Hall> {
-		const hall = await this.hallRepository.create(hallDto);
-
-		return hall;
+		return await this.hallRepository.create(hallDto);
 	}
 
 	public async update(id: number, hallDto: HallDto): Promise<Hall> {
@@ -28,6 +26,6 @@ export class HallService {
 	}
 
 	public async delete(id: string): Promise<any> {
-		return this.hallRepository.destroy({ where: { id } });
+		return await this.hallRepository.destroy({ where: { id } });
 	}
 }

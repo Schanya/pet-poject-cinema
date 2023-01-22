@@ -9,7 +9,7 @@ export class SchemaService {
 	constructor(@InjectModel(Schema) private schemaRepository: typeof Schema) {}
 
 	public async findBy(options: any): Promise<Schema> {
-		return this.schemaRepository.findOne({
+		return await this.schemaRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
@@ -28,6 +28,6 @@ export class SchemaService {
 	}
 
 	public async delete(id: string): Promise<any> {
-		return this.schemaRepository.destroy({ where: { id } });
+		return await this.schemaRepository.destroy({ where: { id } });
 	}
 }
