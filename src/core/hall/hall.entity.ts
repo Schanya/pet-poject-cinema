@@ -6,7 +6,7 @@ interface HallCreationAttrs {
 	name: string;
 }
 
-@Table({ tableName: 'halls' })
+@Table({ tableName: 'halls', paranoid: true })
 export class Hall extends Model<Hall, HallCreationAttrs> {
 	@Column({
 		type: DataType.INTEGER,
@@ -16,7 +16,7 @@ export class Hall extends Model<Hall, HallCreationAttrs> {
 	})
 	id: number;
 
-	@Column({ type: DataType.STRING, allowNull: false })
+	@Column({ type: DataType.STRING, allowNull: false, unique: true })
 	name: string;
 
 	@HasMany(() => Schema)
