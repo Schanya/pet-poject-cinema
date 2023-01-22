@@ -20,8 +20,8 @@ export class MovieService {
 		return movie;
 	}
 
-	public async update(id: number, moviDto: MovieDto): Promise<Movie> {
-		await this.movieRepository.update(moviDto, { where: { id } });
+	public async update(id: number, movieDto: MovieDto): Promise<Movie> {
+		await this.movieRepository.update(movieDto, { where: { id } });
 
 		return await this.findBy({ id: id });
 	}
