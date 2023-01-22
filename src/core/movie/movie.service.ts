@@ -8,16 +8,14 @@ export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
 
 	public async findBy(options: any): Promise<Movie> {
-		return this.movieRepository.findOne({
+		return await this.movieRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
 	}
 
 	public async create(movieDto: MovieDto): Promise<Movie> {
-		const movie = await this.movieRepository.create(movieDto);
-
-		return movie;
+		return await this.movieRepository.create(movieDto);
 	}
 
 	public async update(id: number, movieDto: MovieDto): Promise<Movie> {
@@ -27,6 +25,6 @@ export class MovieService {
 	}
 
 	public async delete(id: string): Promise<any> {
-		return this.movieRepository.destroy({ where: { id } });
+		return await this.movieRepository.destroy({ where: { id } });
 	}
 }

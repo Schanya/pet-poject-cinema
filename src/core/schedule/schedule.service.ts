@@ -11,7 +11,7 @@ export class ScheduleService {
 	) {}
 
 	public async findBy(options: any): Promise<Schedule> {
-		return this.scheduleRepository.findOne({
+		return await this.scheduleRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
@@ -30,6 +30,6 @@ export class ScheduleService {
 	}
 
 	public async delete(id: string): Promise<any> {
-		return this.scheduleRepository.destroy({ where: { id } });
+		return await this.scheduleRepository.destroy({ where: { id } });
 	}
 }
