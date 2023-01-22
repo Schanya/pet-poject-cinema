@@ -1,4 +1,8 @@
-import { Injectable, UseInterceptors } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	UseInterceptors,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { SchemaDto } from './dto/schema.dto';
@@ -16,12 +20,28 @@ export class SchemaService {
 	}
 
 	public async create(schemaDto: SchemaDto): Promise<Schema> {
-		const schema = await this.schemaRepository.create(schemaDto);
+		const existingRowInSchema = await this.findBy({ row: schemaDto.row });
 
-		return schema;
+		if (existingRowInSchema) {
+			throw new BadRequestException('Such row in schema has already exist');
+		}
+
+		return await this.schemaRepository.create(schemaDto);
 	}
 
 	public async update(id: number, schemaDto: SchemaDto): Promise<Schema> {
+		const schema = await this.findBy({ id: id });
+
+		if (!schema) {
+			throw new BadRequestException("Such schema doesn't exist");
+		}
+
+		const existingRowInSchema = await this.findBy({ row: schemaDto.row });
+
+		if (existingRowInSchema) {
+			throw new BadRequestException('Such row in schema has already exist');
+		}
+
 		await this.schemaRepository.update(schemaDto, { where: { id } });
 
 		return await this.findBy({ id: id });
