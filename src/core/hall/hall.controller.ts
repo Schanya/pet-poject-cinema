@@ -26,8 +26,8 @@ export class HallController {
 	}
 
 	@Put(':id')
-	async update(@Param('id') id: number, @Body() moviDto: HallDto) {
-		return await this.hallService.update(id, moviDto);
+	async update(@Param('id') id: number, @Body() hallDto: HallDto) {
+		return await this.hallService.update(id, hallDto);
 	}
 
 	@Delete(':id')
