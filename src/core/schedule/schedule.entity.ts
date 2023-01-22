@@ -27,7 +27,7 @@ export class Schedule extends Model<Schedule, ScheduleCreationAttrs> {
 	})
 	id: number;
 
-	@Column({ type: DataType.DATE, allowNull: false })
+	@Column({ type: DataType.DATE, allowNull: false, unique: true })
 	date: Date;
 
 	@ForeignKey(() => Movie)

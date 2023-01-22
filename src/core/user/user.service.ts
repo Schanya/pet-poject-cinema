@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Transaction } from 'sequelize';
 
@@ -25,9 +25,18 @@ export class UserService {
 		userDto: UserDto,
 		transaction: Transaction,
 	): Promise<User> {
-		const user = await this.userRepository.create(userDto, { transaction });
+		const existingUser = await this.findBy({ email: userDto.email });
 
+		if (existingUser) {
+			throw new BadRequestException('Such email is already in use');
+		}
+
+		const user = await this.userRepository.create(userDto, { transaction });
 		const role = await this.roleService.findBy({ name: 'USER' });
+
+		if (!role) {
+			throw new BadRequestException('This role does not exist.');
+		}
 
 		await user.$set('roles', [role.id], { transaction });
 		user.roles = [role];

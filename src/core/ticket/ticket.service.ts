@@ -1,4 +1,8 @@
-import { Injectable, UseInterceptors } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	UseInterceptors,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { TicketDto } from './dto/ticket.dto';
@@ -22,6 +26,12 @@ export class TicketService {
 	}
 
 	public async update(id: number, ticketDto: TicketDto): Promise<Ticket> {
+		const ticket = await this.findBy({ id: id });
+
+		if (!ticket) {
+			throw new BadRequestException("Such ticket doesn't exist");
+		}
+
 		await this.ticketRepository.update(ticketDto, { where: { id } });
 
 		return await this.findBy({ id: id });

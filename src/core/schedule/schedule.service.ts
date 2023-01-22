@@ -1,4 +1,8 @@
-import { Injectable, UseInterceptors } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	UseInterceptors,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { ScheduleDto } from './dto/schedule.dto';
@@ -18,12 +22,32 @@ export class ScheduleService {
 	}
 
 	public async create(scheduleDto: ScheduleDto): Promise<Schedule> {
-		const schedule = await this.scheduleRepository.create(scheduleDto);
+		const existingDateInSchedule = await this.findBy({
+			date: scheduleDto.date,
+		});
 
-		return schedule;
+		if (existingDateInSchedule) {
+			throw new BadRequestException('Such date in schedule has already exist');
+		}
+
+		return await this.scheduleRepository.create(scheduleDto);
 	}
 
 	public async update(id: number, scheduleDto: ScheduleDto): Promise<Schedule> {
+		const schedule = await this.findBy({ id: id });
+
+		if (!schedule) {
+			throw new BadRequestException("Such schedule doesn't exist");
+		}
+
+		const existingDateInSchedule = await this.findBy({
+			date: scheduleDto.date,
+		});
+
+		if (existingDateInSchedule) {
+			throw new BadRequestException('Such date in schedule has already exist');
+		}
+
 		await this.scheduleRepository.update(scheduleDto, { where: { id } });
 
 		return await this.findBy({ id: id });

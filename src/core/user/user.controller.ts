@@ -1,4 +1,5 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards';
 
@@ -10,7 +11,9 @@ export class UserController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get()
-	async getAll() {
-		return await this.userService.findBy({});
+	async getAll(@Res() res: Response) {
+		const users = await this.userService.findBy({});
+
+		res.status(HttpStatus.OK).send(users);
 	}
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { RoleDto } from './dto/role.dto';
 import { Role } from './role.entity';
@@ -11,6 +11,14 @@ export class RoleService {
 		return await this.roleRepository.findOne({ where: { ...options } });
 	}
 	public async create(roleDto: RoleDto): Promise<Role> {
+		const existingRole = await this.findBy({
+			name: roleDto.name,
+		});
+
+		if (existingRole) {
+			throw new BadRequestException('Such role has already exist');
+		}
+
 		return await this.roleRepository.create(roleDto);
 	}
 }
