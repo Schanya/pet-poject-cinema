@@ -9,8 +9,8 @@ import { Transaction } from 'sequelize';
 
 import { hash, compare } from '../helpers/hash';
 import { UserDto } from '../user/dto/user.dto';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/services/user.service';
 
 @Injectable()
 export class AuthService {
