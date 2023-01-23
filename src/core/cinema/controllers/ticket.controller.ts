@@ -20,7 +20,7 @@ export class TicketController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const tickets = await this.ticketService.findBy({});
+		const tickets = await this.ticketService.findAll({});
 
 		res.status(HttpStatus.OK).send(tickets);
 	}

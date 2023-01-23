@@ -24,7 +24,7 @@ export class StatusController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const statuses = await this.statusService.findBy({});
+		const statuses = await this.statusService.findAll({});
 
 		res.status(HttpStatus.OK).send(statuses);
 	}

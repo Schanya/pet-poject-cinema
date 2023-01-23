@@ -14,6 +14,13 @@ export class ScheduleService {
 		@InjectModel(Schedule) private scheduleRepository: typeof Schedule,
 	) {}
 
+	public async findAll(options: any): Promise<Schedule[]> {
+		return await this.scheduleRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<Schedule> {
 		return await this.scheduleRepository.findOne({
 			where: { ...options },

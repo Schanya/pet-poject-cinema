@@ -7,6 +7,13 @@ import { Status } from '../entities/status.entity';
 export class StatusService {
 	constructor(@InjectModel(Status) private statusRepository: typeof Status) {}
 
+	public async findAll(options: any): Promise<Status[]> {
+		return await this.statusRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<Status> {
 		return await this.statusRepository.findOne({
 			where: { ...options },

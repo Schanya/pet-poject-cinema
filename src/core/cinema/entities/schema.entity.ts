@@ -28,7 +28,7 @@ export class Schema extends Model<Schema, SchemaCreationAttrs> {
 	@Column({ type: DataType.INTEGER, allowNull: false })
 	place: number;
 
-	@Column({ type: DataType.INTEGER, allowNull: false, unique: true })
+	@Column({ type: DataType.INTEGER, allowNull: false })
 	row: number;
 
 	@ForeignKey(() => Hall)

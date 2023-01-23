@@ -20,7 +20,7 @@ export class ScheduleController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const schedules = await this.scheduleService.findBy({});
+		const schedules = await this.scheduleService.findAll({});
 
 		res.status(HttpStatus.OK).send(schedules);
 	}

@@ -20,7 +20,7 @@ export class HallController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const halls = await this.hallService.findBy({});
+		const halls = await this.hallService.findAll({});
 
 		res.status(HttpStatus.OK).send(halls);
 	}

@@ -14,6 +14,13 @@ export class UserService {
 		private roleService: RoleService,
 	) {}
 
+	public async findAll(options: any): Promise<User[]> {
+		return await this.userRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<User> {
 		return await this.userRepository.findOne({
 			where: { ...options },

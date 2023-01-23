@@ -20,7 +20,7 @@ export class SchemaController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const schemas = await this.schemaService.findBy({});
+		const schemas = await this.schemaService.findAll({});
 
 		res.status(HttpStatus.OK).send(schemas);
 	}

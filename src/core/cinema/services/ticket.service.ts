@@ -12,6 +12,13 @@ import { Ticket } from '../entities/ticket.entity';
 export class TicketService {
 	constructor(@InjectModel(Ticket) private ticketRepository: typeof Ticket) {}
 
+	public async findAll(options: any): Promise<Ticket[]> {
+		return await this.ticketRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<Ticket> {
 		return await this.ticketRepository.findOne({
 			where: { ...options },

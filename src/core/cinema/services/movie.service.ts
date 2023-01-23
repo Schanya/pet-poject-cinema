@@ -11,6 +11,13 @@ import { Movie } from '../entities/movie.entity';
 export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
 
+	public async findAll(options: any): Promise<Movie[]> {
+		return await this.movieRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<Movie> {
 		return await this.movieRepository.findOne({
 			where: { ...options },

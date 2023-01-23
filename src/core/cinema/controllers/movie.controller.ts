@@ -23,7 +23,7 @@ export class MovieController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const movies = await this.movieService.findBy({});
+		const movies = await this.movieService.findAll({});
 
 		res.status(HttpStatus.OK).send(movies);
 	}

@@ -12,6 +12,13 @@ import { Hall } from '../entities/hall.entity';
 export class HallService {
 	constructor(@InjectModel(Hall) private hallRepository: typeof Hall) {}
 
+	public async findAll(options: any): Promise<Hall[]> {
+		return await this.hallRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<Hall> {
 		return await this.hallRepository.findOne({
 			where: { ...options },

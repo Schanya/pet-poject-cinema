@@ -12,6 +12,13 @@ import { Schema } from '../entities/schema.entity';
 export class SchemaService {
 	constructor(@InjectModel(Schema) private schemaRepository: typeof Schema) {}
 
+	public async findAll(options: any): Promise<Schema[]> {
+		return await this.schemaRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
+
 	public async findBy(options: any): Promise<Schema> {
 		return await this.schemaRepository.findOne({
 			where: { ...options },

@@ -12,7 +12,7 @@ export class UserController {
 	@UseGuards(JwtAuthGuard)
 	@Get()
 	async getAll(@Res() res: Response) {
-		const users = await this.userService.findBy({});
+		const users = await this.userService.findAll({});
 
 		res.status(HttpStatus.OK).send(users);
 	}
