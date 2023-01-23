@@ -7,6 +7,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { SchemaModule } from './schema/schema.module';
 import { TicketModule } from './ticket/ticket.module';
 import { UserModule } from './user/user.module';
+import { StatusModule } from './status/status.module';
 
 @Module({
 	imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module';
 		SchemaModule,
 		ScheduleModule,
 		TicketModule,
+		StatusModule,
 	],
 })
 export class CoreModule {}

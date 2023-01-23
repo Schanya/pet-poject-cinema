@@ -5,6 +5,7 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
+import { Status } from '../status/status.entity';
 import { Ticket } from '../ticket/ticket.entity';
 import { User } from '../user/user.entity';
 
@@ -30,4 +31,8 @@ export class Basket extends Model<Basket> {
 	@ForeignKey(() => Ticket)
 	@Column({ type: DataType.INTEGER })
 	ticketId: number;
+
+	@ForeignKey(() => Status)
+	@Column({ type: DataType.INTEGER })
+	statusId: number;
 }

@@ -5,7 +5,9 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
+import { Basket } from '../basket/basket.entity';
 import { Role } from '../role/role.entity';
+import { Ticket } from '../ticket/ticket.entity';
 import { UserToRole } from '../user-role/user-role.entity';
 
 interface UserCreationAttrs {
@@ -31,4 +33,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
 	@BelongsToMany(() => Role, () => UserToRole)
 	roles: Role[];
+
+	@BelongsToMany(() => Ticket, () => Basket)
+	tickets: Ticket[];
 }
