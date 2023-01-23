@@ -1,13 +1,16 @@
 import {
+	BelongsToMany,
 	Column,
 	DataType,
 	ForeignKey,
 	Model,
 	Table,
 } from 'sequelize-typescript';
+import { Basket } from '../basket/basket.entity';
 
 import { Schedule } from '../schedule/schedule.entity';
 import { Schema } from '../schema/schema.entity';
+import { User } from '../user/user.entity';
 
 interface TicketCreationAttrs {
 	schemaId: number;
@@ -31,4 +34,7 @@ export class Ticket extends Model<Ticket, TicketCreationAttrs> {
 	@ForeignKey(() => Schedule)
 	@Column({ type: DataType.INTEGER })
 	scheduleId: number;
+
+	@BelongsToMany(() => User, () => Basket)
+	users: User[];
 }
