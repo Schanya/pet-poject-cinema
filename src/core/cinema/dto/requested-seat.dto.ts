@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsDefined, IsInt } from 'class-validator';
+import { IsDefined, IsInt } from 'class-validator';
 
-export class TicketDto {
+export class RequestedSeatDto {
 	@IsDefined()
 	@IsInt({ each: true })
 	@Transform((schemaId) => Number(schemaId))

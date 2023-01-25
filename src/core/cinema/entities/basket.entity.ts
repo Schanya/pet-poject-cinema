@@ -5,8 +5,7 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
-import { Status } from './status.entity';
-import { Ticket } from './ticket.entity';
+import { Status, Ticket } from '.';
 import { User } from '../../user/entities/user.entity';
 
 @Table({

@@ -5,13 +5,14 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
+import { User } from 'src/core/user/entities';
 
-import { Schedule } from './schedule.entity';
-import { Schema } from './schema.entity';
+import { Schedule, Schema } from '.';
 
 interface RequestedSeatCreationAttrs {
 	schemaId: number;
 	scheduleId: number;
+	userId: number;
 }
 
 @Table({ tableName: 'requsted_seats', paranoid: true })
@@ -31,4 +32,8 @@ export class RequestedSeat extends Model<RequestedSeatCreationAttrs> {
 	@ForeignKey(() => Schedule)
 	@Column({ type: DataType.INTEGER })
 	scheduleId: number;
+
+	@ForeignKey(() => User)
+	@Column({ type: DataType.INTEGER })
+	userId: number;
 }

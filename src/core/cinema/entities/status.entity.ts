@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Basket } from './basket.entity';
+import { Basket } from '.';
 
 interface StatusCreationAttrs {
 	name: string;

@@ -5,14 +5,21 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { ScheduleDto } from '../dto/schedule.dto';
-import { Schedule } from '../entities/schedule.entity';
+import { ScheduleDto } from '../dto';
+import { Schedule } from '../entities';
 
 @Injectable()
 export class ScheduleService {
 	constructor(
 		@InjectModel(Schedule) private scheduleRepository: typeof Schedule,
 	) {}
+
+	public async findAll(options: any): Promise<Schedule[]> {
+		return await this.scheduleRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
 
 	public async findBy(options: any): Promise<Schedule> {
 		return await this.scheduleRepository.findOne({

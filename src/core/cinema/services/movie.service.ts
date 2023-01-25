@@ -4,12 +4,20 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { MovieDto } from '../dto/movie.dto';
-import { Movie } from '../entities/movie.entity';
+
+import { MovieDto } from '../dto';
+import { Movie } from '../entities';
 
 @Injectable()
 export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
+
+	public async findAll(options: any): Promise<Movie[]> {
+		return await this.movieRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
 
 	public async findBy(options: any): Promise<Movie> {
 		return await this.movieRepository.findOne({

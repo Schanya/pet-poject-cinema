@@ -15,3 +15,15 @@ export class SchemaDto {
 	@Transform((hallId) => Number(hallId))
 	hallId: number;
 }
+
+export class AddToBasketDto {
+	@IsDefined()
+	@IsInt({ each: true })
+	@Transform((hallId) => Number(hallId))
+	hallId: number;
+
+	@IsDefined()
+	@IsInt({ each: true })
+	@Transform((scheduleId) => Number(scheduleId))
+	scheduleId: number;
+}

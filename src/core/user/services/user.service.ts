@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Transaction } from 'sequelize';
 
-import { RoleService } from './role.service';
+import { RoleService } from '.';
 
-import { UserDto } from '../dto/user.dto';
-import { User } from '../entities/user.entity';
+import { UserDto } from '../dto';
+import { User } from '../entities';
 
 @Injectable()
 export class UserService {
@@ -13,6 +13,13 @@ export class UserService {
 		@InjectModel(User) private userRepository: typeof User,
 		private roleService: RoleService,
 	) {}
+
+	public async findAll(options: any): Promise<User[]> {
+		return await this.userRepository.findAll({
+			where: { ...options },
+			include: { all: true },
+		});
+	}
 
 	public async findBy(options: any): Promise<User> {
 		return await this.userRepository.findOne({

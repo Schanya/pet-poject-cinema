@@ -6,11 +6,9 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
-import { Basket } from './basket.entity';
-
-import { Schedule } from './schedule.entity';
-import { Schema } from './schema.entity';
 import { User } from '../../user/entities/user.entity';
+
+import { Basket, Schedule, Schema } from '.';
 
 interface TicketCreationAttrs {
 	schemaId: number;

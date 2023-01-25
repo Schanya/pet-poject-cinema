@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { TicketDto } from '../dto/ticket.dto';
-import { TicketService } from '../services/ticket.service';
+import { TicketDto } from '../dto';
+import { TicketService } from '../services';
 
 @Controller('ticket')
 export class TicketController {
@@ -20,7 +20,7 @@ export class TicketController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const tickets = await this.ticketService.findBy({});
+		const tickets = await this.ticketService.findAll({});
 
 		res.status(HttpStatus.OK).send(tickets);
 	}

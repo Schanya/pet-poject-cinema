@@ -16,6 +16,7 @@ import {
 import {
 	HallController,
 	MovieController,
+	RequestedSeatController,
 	ScheduleController,
 	SchemaController,
 	StatusController,
@@ -24,11 +25,13 @@ import {
 import {
 	HallService,
 	MovieService,
+	RequestedSeatService,
 	ScheduleService,
 	SchemaService,
 	StatusService,
 	TicketService,
 } from './services';
+import { UserModule } from '../user/user.module';
 
 @Module({
 	imports: [
@@ -43,6 +46,7 @@ import {
 			Ticket,
 		]),
 		forwardRef(() => AuthModule),
+		UserModule,
 	],
 	controllers: [
 		HallController,
@@ -51,6 +55,7 @@ import {
 		SchemaController,
 		StatusController,
 		TicketController,
+		RequestedSeatController,
 	],
 	providers: [
 		HallService,
@@ -59,6 +64,7 @@ import {
 		SchemaService,
 		StatusService,
 		TicketService,
+		RequestedSeatService,
 	],
 	exports: [
 		HallService,
@@ -67,6 +73,7 @@ import {
 		SchemaService,
 		StatusService,
 		TicketService,
+		RequestedSeatService,
 	],
 })
 export class CinemaModule {}

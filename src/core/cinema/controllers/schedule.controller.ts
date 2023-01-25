@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { ScheduleDto } from '../dto/schedule.dto';
-import { ScheduleService } from '../services/schedule.service';
+import { ScheduleDto } from '../dto';
+import { ScheduleService } from '../services';
 
 @Controller('schedule')
 export class ScheduleController {
@@ -20,7 +20,7 @@ export class ScheduleController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const schedules = await this.scheduleService.findBy({});
+		const schedules = await this.scheduleService.findAll({});
 
 		res.status(HttpStatus.OK).send(schedules);
 	}

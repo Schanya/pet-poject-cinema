@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { HallDto } from '../dto/hall.dto';
-import { HallService } from '../services/hall.service';
+import { HallDto } from '../dto';
+import { HallService } from '../services';
 
 @Controller('hall')
 export class HallController {
@@ -20,7 +20,7 @@ export class HallController {
 
 	@Get()
 	async getAll(@Res() res: Response) {
-		const halls = await this.hallService.findBy({});
+		const halls = await this.hallService.findAll({});
 
 		res.status(HttpStatus.OK).send(halls);
 	}
