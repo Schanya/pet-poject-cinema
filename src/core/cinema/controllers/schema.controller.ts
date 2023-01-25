@@ -7,16 +7,45 @@ import {
 	Param,
 	Post,
 	Put,
+	Request,
 	Res,
+	UseGuards,
+	UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { Transaction } from 'sequelize';
 
-import { SchemaDto } from '../dto/schema.dto';
-import { SchemaService } from '../services/schema.service';
+import { TransactionInterceptor } from 'src/core/helpers/interceptors';
+import { Roles, TransactionParam } from 'src/core/helpers/decorators';
+import { JwtAuthGuard, RolesGuard } from 'src/core/auth/guards';
+
+import { AddToBasketDto, SchemaDto } from '../dto';
+
+import { SchemaService } from '../services';
 
 @Controller('schema')
 export class SchemaController {
 	constructor(readonly schemaService: SchemaService) {}
+
+	@Roles('USER', 'ADMIN')
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@UseInterceptors(TransactionInterceptor)
+	@Post('add-to-basket')
+	async addToBasket(
+		@Res() res: Response,
+		@Request() req,
+		@Body() addToBasketDto: AddToBasketDto,
+		@TransactionParam() transaction: Transaction,
+	) {
+		const tikets = await this.schemaService.addToBasket(
+			addToBasketDto,
+			req.user.id,
+			transaction,
+		);
+		res
+			.status(HttpStatus.OK)
+			.send({ message: 'Tickets added to cart', tikets });
+	}
 
 	@Get()
 	async getAll(@Res() res: Response) {
