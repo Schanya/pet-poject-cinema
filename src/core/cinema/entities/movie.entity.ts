@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Schedule } from './schedule.entity';
+import { Schedule } from '.';
 
 interface MovieCreationAttrs {
 	name: string;

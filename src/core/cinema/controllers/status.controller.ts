@@ -11,10 +11,12 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
 import { Roles } from '../../helpers/decorators';
-import { StatusDto } from '../dto/status.dto';
-import { StatusService } from '../services/status.service';
+
+import { StatusDto } from '../dto';
+import { StatusService } from '../services';
 
 @Roles('ADMIN')
 @UseGuards(JwtAuthGuard, RolesGuard)

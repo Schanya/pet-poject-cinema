@@ -12,8 +12,8 @@ import { UserDto } from '../user/dto/user.dto';
 import { AuthService } from './auth.service';
 
 import { LocalAuthGuard } from './guards';
-import { TransactionInterceptor } from '../helpers/interceptors/transaction.interceptor';
-import { TransactionParam } from '../helpers/interceptors/transaction.decarator';
+import { TransactionInterceptor } from '../helpers/interceptors';
+import { TransactionParam } from '../helpers/decorators';
 import { Transaction } from 'sequelize';
 import { Response } from 'express';
 

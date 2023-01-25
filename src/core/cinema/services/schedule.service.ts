@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { ScheduleDto } from '../dto/schedule.dto';
-import { Schedule } from '../entities/schedule.entity';
+import { ScheduleDto } from '../dto';
+import { Schedule } from '../entities';
 
 @Injectable()
 export class ScheduleService {

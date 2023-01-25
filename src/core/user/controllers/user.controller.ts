@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 import { JwtAuthGuard } from '../../auth/guards';
 
-import { UserService } from '../services/user.service';
+import { UserService } from '../services';
 
 @Controller('user')
 export class UserController {

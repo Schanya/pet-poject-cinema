@@ -1,6 +1,6 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Schedule } from './schedule.entity';
-import { Schema } from './schema.entity';
+
+import { Schema, Schedule } from '.';
 
 interface HallCreationAttrs {
 	name: string;

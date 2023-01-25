@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { TicketDto } from '../dto/ticket.dto';
-import { TicketService } from '../services/ticket.service';
+import { TicketDto } from '../dto';
+import { TicketService } from '../services';
 
 @Controller('ticket')
 export class TicketController {

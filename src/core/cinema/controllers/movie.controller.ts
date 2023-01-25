@@ -14,8 +14,8 @@ import { Response } from 'express';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
 import { Roles } from '../../helpers/decorators';
 
-import { MovieDto } from '../dto/movie.dto';
-import { MovieService } from '../services/movie.service';
+import { MovieDto } from '../dto';
+import { MovieService } from '../services';
 
 @Controller('movie')
 export class MovieController {

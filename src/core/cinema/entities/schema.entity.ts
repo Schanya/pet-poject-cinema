@@ -6,8 +6,7 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
-import { Hall } from './hall.entity';
-import { Ticket } from './ticket.entity';
+import { Hall, RequestedSeat, Ticket } from '.';
 
 interface SchemaCreationAttrs {
 	place: number;
@@ -37,4 +36,7 @@ export class Schema extends Model<Schema, SchemaCreationAttrs> {
 
 	@HasMany(() => Ticket)
 	tickets: Ticket[];
+
+	@HasMany(() => RequestedSeat)
+	requestedSeats: RequestedSeat[];
 }

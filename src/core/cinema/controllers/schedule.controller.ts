@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { ScheduleDto } from '../dto/schedule.dto';
-import { ScheduleService } from '../services/schedule.service';
+import { ScheduleDto } from '../dto';
+import { ScheduleService } from '../services';
 
 @Controller('schedule')
 export class ScheduleController {

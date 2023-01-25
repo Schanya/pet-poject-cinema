@@ -6,10 +6,7 @@ import {
 	Model,
 	Table,
 } from 'sequelize-typescript';
-import { Timestamp } from 'typeorm';
-import { Hall } from './hall.entity';
-import { Movie } from './movie.entity';
-import { Ticket } from './ticket.entity';
+import { Hall, Movie, RequestedSeat, Ticket } from '.';
 
 interface ScheduleCreationAttrs {
 	date: Date;
@@ -40,4 +37,7 @@ export class Schedule extends Model<Schedule, ScheduleCreationAttrs> {
 
 	@HasMany(() => Ticket)
 	tickets: Ticket[];
+
+	@HasMany(() => RequestedSeat)
+	requestedSeats: RequestedSeat[];
 }

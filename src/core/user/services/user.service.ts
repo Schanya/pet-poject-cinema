@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Transaction } from 'sequelize';
 
-import { RoleService } from './role.service';
+import { RoleService } from '.';
 
-import { UserDto } from '../dto/user.dto';
-import { User } from '../entities/user.entity';
+import { UserDto } from '../dto';
+import { User } from '../entities';
 
 @Injectable()
 export class UserService {

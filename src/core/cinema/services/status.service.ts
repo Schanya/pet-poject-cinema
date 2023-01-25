@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { StatusDto } from '../dto/status.dto';
-import { Status } from '../entities/status.entity';
+
+import { StatusDto } from '../dto';
+import { Status } from '../entities';
 
 @Injectable()
 export class StatusService {

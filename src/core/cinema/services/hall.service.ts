@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { HallDto } from '../dto/hall.dto';
-import { Hall } from '../entities/hall.entity';
+import { HallDto } from '../dto';
+import { Hall } from '../entities';
 
 @Injectable()
 export class HallService {

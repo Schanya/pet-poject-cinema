@@ -2,6 +2,7 @@ import {
 	BelongsToMany,
 	Column,
 	DataType,
+	HasMany,
 	Model,
 	Table,
 } from 'sequelize-typescript';
@@ -9,6 +10,7 @@ import { Basket } from '../../cinema/entities/basket.entity';
 import { Role } from './role.entity';
 import { Ticket } from '../../cinema/entities/ticket.entity';
 import { UserToRole } from './user-role.entity';
+import { RequestedSeat } from 'src/core/cinema/entities';
 
 interface UserCreationAttrs {
 	login: string;
@@ -36,4 +38,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
 	@BelongsToMany(() => Ticket, () => Basket)
 	tickets: Ticket[];
+
+	@HasMany(() => RequestedSeat)
+	requestedSeats: RequestedSeat[];
 }

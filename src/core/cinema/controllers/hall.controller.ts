@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { HallDto } from '../dto/hall.dto';
-import { HallService } from '../services/hall.service';
+import { HallDto } from '../dto';
+import { HallService } from '../services';
 
 @Controller('hall')
 export class HallController {

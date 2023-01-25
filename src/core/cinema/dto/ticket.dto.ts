@@ -9,6 +9,6 @@ export class TicketDto {
 
 	@IsDefined()
 	@IsInt({ each: true })
-	@Transform((acheduleId) => Number(acheduleId))
-	acheduleId: number;
+	@Transform((scheduleId) => Number(scheduleId))
+	scheduleId: number;
 }
