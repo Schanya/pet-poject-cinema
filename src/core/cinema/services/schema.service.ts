@@ -3,7 +3,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Transaction } from 'sequelize';
 
 import { UserService } from 'src/core/user/services';
-import { RequestedSeatService, StatusService, TicketService } from '.';
+// import { RequestedSeatService, TicketService, StatusService } from '.';
+import { RequestedSeatService } from './requested-seat.service';
+import { TicketService } from './ticket.service';
+import { StatusService } from './status.service';
 
 import { AddToBasketDto, SchemaDto } from '../dto';
 import { Ticket, Schema, RequestedSeat, Basket } from '../entities';
