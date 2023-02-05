@@ -6,8 +6,8 @@ import { Sequelize } from 'sequelize-typescript';
 import { TransactionInterceptor } from '../helpers/interceptors/transaction.interceptor';
 
 import { UserModule } from '../user/user.module';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthController } from './application/auth.controller';
+import { AuthService } from './domain/auth.service';
 
 import { JwtStrategy, LocalStrategy } from './strategies';
 
