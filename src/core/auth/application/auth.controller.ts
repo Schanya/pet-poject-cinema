@@ -21,25 +21,25 @@ import { Response } from 'express';
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
-	// @UseGuards(LocalAuthGuard)
-	// @Post('sign-in')
-	// async login(@Body() userDto: UserDto, @Res() res: Response) {
-	// 	const token = await this.authService.login(userDto);
+	@UseGuards(LocalAuthGuard)
+	@Post('sign-in')
+	async login(@Body() userDto: UserDto, @Res() res: Response) {
+		const token = await this.authService.login(userDto);
 
-	// 	res.status(HttpStatus.OK).send(token);
-	// }
+		res.status(HttpStatus.OK).send(token);
+	}
 
-	// @UseInterceptors(TransactionInterceptor)
-	// @Post('sign-up')
-	// async registration(
-	// 	@Body() userDto: UserDto,
-	// 	@TransactionParam() transaction: Transaction,
-	// 	@Res() res: Response,
-	// ) {
-	// 	const user = await this.authService.registration(userDto, transaction);
+	@UseInterceptors(TransactionInterceptor)
+	@Post('sign-up')
+	async registration(
+		@Body() userDto: UserDto,
+		@TransactionParam() transaction: Transaction,
+		@Res() res: Response,
+	) {
+		const user = await this.authService.registration(userDto, transaction);
 
-	// 	res
-	// 		.status(HttpStatus.OK)
-	// 		.send(`User ${user.email} registered successfully`);
-	// }
+		res
+			.status(HttpStatus.OK)
+			.send(`User ${user.email} registered successfully`);
+	}
 }

@@ -33,7 +33,7 @@ export class TransactionInterceptor implements NestInterceptor {
 			}),
 			catchError(async (err) => {
 				await transaction.rollback();
-				return throwError(err);
+				throw Error(err);
 			}),
 		);
 	}
