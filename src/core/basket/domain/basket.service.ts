@@ -10,10 +10,12 @@ export class BasketService {
 	constructor(@InjectModel(Basket) private basketRepository: typeof Basket) {}
 
 	public async findBy(options: any): Promise<Basket> {
-		return await this.basketRepository.findOne({
+		const basket = await this.basketRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return basket;
 	}
 
 	public async create(
