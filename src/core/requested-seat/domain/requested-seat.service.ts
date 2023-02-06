@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { Schema } from 'src/core/schema/domain/schema.entity';
-
-import { RequestedSeatDto } from '../presentation/requested-seat.dto';
+import {
+	RequestedSeatDto,
+	RequestedSeatOptions,
+} from '../presentation/requested-seat.dto';
 import { RequestedSeat } from './requested-seat.entity';
 
 @Injectable()
@@ -13,24 +14,24 @@ export class RequestedSeatService {
 		private requestedSeatRepository: typeof RequestedSeat,
 	) {}
 
-	public async findAllByHall(options: any): Promise<any[]> {
-		return await this.requestedSeatRepository.findAll({
-			include: [{ model: Schema, required: false, right: false }],
-		});
-	}
-
-	public async findAll(options: any): Promise<RequestedSeat[]> {
-		return await this.requestedSeatRepository.findAll({
+	public async findAll(
+		options: RequestedSeatOptions,
+	): Promise<RequestedSeat[]> {
+		const suitableRequestedSeats = await this.requestedSeatRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableRequestedSeats;
 	}
 
-	public async findBy(options: any): Promise<RequestedSeat> {
-		return await this.requestedSeatRepository.findOne({
+	public async findBy(options: RequestedSeatOptions): Promise<RequestedSeat> {
+		const suitableRequestedSeat = await this.requestedSeatRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableRequestedSeat;
 	}
 
 	public async create(
@@ -46,9 +47,11 @@ export class RequestedSeatService {
 			throw new BadRequestException('Place already taken');
 		}
 
-		return await this.requestedSeatRepository.create({
+		const createdRequestedSeat = await this.requestedSeatRepository.create({
 			...requestedSeatDto,
 			userId: userId,
 		});
+
+		return createdRequestedSeat;
 	}
 }
