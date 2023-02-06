@@ -17,3 +17,20 @@ export class BasketDto {
 	@Transform((userId) => Number(userId))
 	userId: number;
 }
+
+export class BasketOptions {
+	@IsInt()
+	id: number;
+
+	@IsInt({ each: true })
+	@Transform((statusId) => Number(statusId))
+	statusId?: number;
+
+	@IsInt({ each: true })
+	@Transform((ticketId) => Number(ticketId))
+	ticketId?: number;
+
+	@IsInt({ each: true })
+	@Transform((userId) => Number(userId))
+	userId?: number;
+}
