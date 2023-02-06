@@ -8,11 +8,14 @@ import { TicketService } from '../../ticket/domain/ticket.service';
 import { StatusService } from '../../status/domain/status.service';
 
 import { Schema } from './schema.entity';
-import { Basket } from 'src/core/basket/domain/basket.entity';
 import { Ticket } from 'src/core/ticket/domain/ticket.entity';
 import { RequestedSeat } from 'src/core/requested-seat/domain/requested-seat.entity';
 
-import { AddToBasketDto, SchemaDto } from '../presentation/schema.dto';
+import {
+	AddToBasketDto,
+	SchemaDto,
+	SchemaOptions,
+} from '../presentation/schema.dto';
 import { BasketService } from 'src/core/basket/domain/basket.service';
 
 @Injectable()
@@ -61,11 +64,15 @@ export class SchemaService {
 			user.tickets.push(ticket);
 		}
 
-		return user.tickets;
+		const addedTickets = user.tickets;
+
+		return addedTickets;
 	}
 
-	public async findAllByHall(addToBasketDto: AddToBasketDto): Promise<any[]> {
-		return await this.schemaRepository.findAll({
+	public async findAllByHall(
+		addToBasketDto: AddToBasketDto,
+	): Promise<Schema[]> {
+		const suitableSchema = await this.schemaRepository.findAll({
 			include: [
 				{
 					model: RequestedSeat,
@@ -75,20 +82,26 @@ export class SchemaService {
 			],
 			where: { hallId: addToBasketDto.hallId },
 		});
+
+		return suitableSchema;
 	}
 
-	public async findAll(options: any): Promise<Schema[]> {
-		return await this.schemaRepository.findAll({
+	public async findAll(options: SchemaOptions): Promise<Schema[]> {
+		const suitableSchemas = await this.schemaRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableSchemas;
 	}
 
-	public async findBy(options: any): Promise<Schema> {
-		return await this.schemaRepository.findOne({
+	public async findBy(options: SchemaOptions): Promise<Schema> {
+		const suitableSchema = await this.schemaRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableSchema;
 	}
 
 	public async create(schemaDto: SchemaDto): Promise<Schema> {
@@ -98,7 +111,9 @@ export class SchemaService {
 			throw new BadRequestException('Such row in schema has already exist');
 		}
 
-		return await this.schemaRepository.create(schemaDto);
+		const createdSchema = await this.schemaRepository.create(schemaDto);
+
+		return createdSchema;
 	}
 
 	public async update(id: number, schemaDto: SchemaDto): Promise<Schema> {
@@ -116,10 +131,16 @@ export class SchemaService {
 
 		await this.schemaRepository.update(schemaDto, { where: { id } });
 
-		return await this.findBy({ id: id });
+		const updatedSchema = await this.findBy({ id: id });
+
+		return updatedSchema;
 	}
 
-	public async delete(id: string): Promise<any> {
-		return await this.schemaRepository.destroy({ where: { id } });
+	public async delete(id: string): Promise<number> {
+		const numberOfDeletedRows = await this.schemaRepository.destroy({
+			where: { id },
+		});
+
+		return numberOfDeletedRows;
 	}
 }
