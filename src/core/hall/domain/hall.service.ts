@@ -6,24 +6,28 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 
 import { Hall } from './hall.entity';
-import { HallDto } from '../presentation/hall.dto';
+import { HallDto, HallOptions } from '../presentation/hall.dto';
 
 @Injectable()
 export class HallService {
 	constructor(@InjectModel(Hall) private hallRepository: typeof Hall) {}
 
-	public async findAll(options: any): Promise<Hall[]> {
-		return await this.hallRepository.findAll({
+	public async findAll(options: HallOptions): Promise<Hall[]> {
+		const suitableHalls = await this.hallRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableHalls;
 	}
 
-	public async findBy(options: any): Promise<Hall> {
-		return await this.hallRepository.findOne({
+	public async findBy(options: HallOptions): Promise<Hall> {
+		const suitableHall = await this.hallRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableHall;
 	}
 
 	public async create(hallDto: HallDto): Promise<Hall> {
@@ -33,7 +37,9 @@ export class HallService {
 			throw new BadRequestException('Such hall has already exist');
 		}
 
-		return await this.hallRepository.create(hallDto);
+		const createdHall = await this.hallRepository.create(hallDto);
+
+		return createdHall;
 	}
 
 	public async update(id: number, hallDto: HallDto): Promise<Hall> {
@@ -51,10 +57,16 @@ export class HallService {
 
 		await this.hallRepository.update(hallDto, { where: { id } });
 
-		return await this.findBy({ id: id });
+		const updatedHall = await this.findBy({ id: id });
+
+		return updatedHall;
 	}
 
-	public async delete(id: string): Promise<any> {
-		return await this.hallRepository.destroy({ where: { id } });
+	public async delete(id: string): Promise<number> {
+		const numberDeletedRows = await this.hallRepository.destroy({
+			where: { id },
+		});
+
+		return numberDeletedRows;
 	}
 }
