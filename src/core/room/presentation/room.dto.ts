@@ -7,7 +7,6 @@ import {
 	IsString,
 	MaxLength,
 } from 'class-validator';
-import { Min } from 'sequelize-typescript';
 
 export class RoomDto {
 	@IsNotEmpty()
@@ -23,4 +22,20 @@ export class RoomDto {
 	@IsInt({ each: true })
 	@Transform((movieId) => Number(movieId))
 	movieId: number;
+}
+
+export class RoomOptions {
+	@IsInt()
+	id?: number;
+
+	@MaxLength(255)
+	@IsString()
+	name?: string;
+
+	@IsNumber()
+	numberOfUsers?: number;
+
+	@IsInt({ each: true })
+	@Transform((movieId) => Number(movieId))
+	movieId?: number;
 }
