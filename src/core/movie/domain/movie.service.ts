@@ -1,29 +1,29 @@
-import {
-	BadRequestException,
-	Injectable,
-	UseInterceptors,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { MovieDto } from '../presentation/movie.dto';
+import { MovieDto, MovieOptions } from '../presentation/movie.dto';
 import { Movie } from './movie.entity';
 
 @Injectable()
 export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
 
-	public async findAll(options: any): Promise<Movie[]> {
-		return await this.movieRepository.findAll({
+	public async findAll(options: MovieOptions): Promise<Movie[]> {
+		const suitableMovies = await this.movieRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableMovies;
 	}
 
-	public async findBy(options: any): Promise<Movie> {
-		return await this.movieRepository.findOne({
+	public async findBy(options: MovieOptions): Promise<Movie> {
+		const suitableMovie = await this.movieRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableMovie;
 	}
 
 	public async create(movieDto: MovieDto): Promise<Movie> {
@@ -51,10 +51,16 @@ export class MovieService {
 
 		await this.movieRepository.update(movieDto, { where: { id } });
 
-		return await this.findBy({ id: id });
+		const updatedMovie = await this.findBy({ id: id });
+
+		return updatedMovie;
 	}
 
-	public async delete(id: string): Promise<any> {
-		return await this.movieRepository.destroy({ where: { id } });
+	public async delete(id: string): Promise<number> {
+		const numberDeletedRows = await this.movieRepository.destroy({
+			where: { id },
+		});
+
+		return numberDeletedRows;
 	}
 }

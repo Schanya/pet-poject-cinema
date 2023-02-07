@@ -12,3 +12,16 @@ export class TicketDto {
 	@Transform((scheduleId) => Number(scheduleId))
 	scheduleId: number;
 }
+
+export class TicketOptions {
+	@IsInt()
+	id?: number;
+
+	@IsInt({ each: true })
+	@Transform((schemaId) => Number(schemaId))
+	schemaId?: number;
+
+	@IsInt({ each: true })
+	@Transform((scheduleId) => Number(scheduleId))
+	scheduleId?: number;
+}

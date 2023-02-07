@@ -1,11 +1,7 @@
-import {
-	BadRequestException,
-	Injectable,
-	UseInterceptors,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { ScheduleDto } from '../presentation/schedule.dto';
+import { ScheduleDto, ScheduleOptions } from '../presentation/schedule.dto';
 import { Schedule } from './schedule.entity';
 
 @Injectable()
@@ -14,18 +10,22 @@ export class ScheduleService {
 		@InjectModel(Schedule) private scheduleRepository: typeof Schedule,
 	) {}
 
-	public async findAll(options: any): Promise<Schedule[]> {
-		return await this.scheduleRepository.findAll({
+	public async findAll(options: ScheduleOptions): Promise<Schedule[]> {
+		const suitableSchedules = await this.scheduleRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableSchedules;
 	}
 
-	public async findBy(options: any): Promise<Schedule> {
-		return await this.scheduleRepository.findOne({
+	public async findBy(options: ScheduleOptions): Promise<Schedule> {
+		const suitableSchedule = await this.scheduleRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableSchedule;
 	}
 
 	public async create(scheduleDto: ScheduleDto): Promise<Schedule> {
@@ -37,7 +37,9 @@ export class ScheduleService {
 			throw new BadRequestException('Such date in schedule has already exist');
 		}
 
-		return await this.scheduleRepository.create(scheduleDto);
+		const createdSchedule = await this.scheduleRepository.create(scheduleDto);
+
+		return createdSchedule;
 	}
 
 	public async update(id: number, scheduleDto: ScheduleDto): Promise<Schedule> {
@@ -57,10 +59,16 @@ export class ScheduleService {
 
 		await this.scheduleRepository.update(scheduleDto, { where: { id } });
 
-		return await this.findBy({ id: id });
+		const updatedSchedule = await this.findBy({ id: id });
+
+		return updatedSchedule;
 	}
 
-	public async delete(id: string): Promise<any> {
-		return await this.scheduleRepository.destroy({ where: { id } });
+	public async delete(id: string): Promise<number> {
+		const numberOfDeletedRows = await this.scheduleRepository.destroy({
+			where: { id },
+		});
+
+		return numberOfDeletedRows;
 	}
 }

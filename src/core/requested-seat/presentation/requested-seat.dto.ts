@@ -12,3 +12,20 @@ export class RequestedSeatDto {
 	@Transform((scheduleId) => Number(scheduleId))
 	scheduleId: number;
 }
+
+export class RequestedSeatOptions {
+	@IsInt()
+	id?: number;
+
+	@IsInt({ each: true })
+	@Transform((schemaId) => Number(schemaId))
+	schemaId?: number;
+
+	@IsInt({ each: true })
+	@Transform((scheduleId) => Number(scheduleId))
+	scheduleId?: number;
+
+	@IsInt({ each: true })
+	@Transform((scheduleId) => Number(scheduleId))
+	userId?: number;
+}

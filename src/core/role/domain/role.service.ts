@@ -1,15 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { RoleDto } from '../presentation/role.dto';
+import { RoleDto, RoleOptions } from '../presentation/role.dto';
 import { Role } from './role.entity';
 
 @Injectable()
 export class RoleService {
 	constructor(@InjectModel(Role) private roleRepository: typeof Role) {}
 
-	public async findBy(options: any): Promise<Role> {
-		return await this.roleRepository.findOne({ where: { ...options } });
+	public async findBy(options: RoleOptions): Promise<Role> {
+		const suitableRole = await this.roleRepository.findOne({
+			where: { ...options },
+		});
+
+		return suitableRole;
 	}
 	public async create(roleDto: RoleDto): Promise<Role> {
 		const existingRole = await this.findBy({
@@ -20,6 +24,8 @@ export class RoleService {
 			throw new BadRequestException('Such role has already exist');
 		}
 
-		return await this.roleRepository.create(roleDto);
+		const createdRole = await this.roleRepository.create(roleDto);
+
+		return createdRole;
 	}
 }

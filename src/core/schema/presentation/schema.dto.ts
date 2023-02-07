@@ -27,3 +27,18 @@ export class AddToBasketDto {
 	@Transform((scheduleId) => Number(scheduleId))
 	scheduleId: number;
 }
+
+export class SchemaOptions {
+	@IsInt()
+	id?: number;
+
+	@IsNumber()
+	place?: number;
+
+	@IsNumber()
+	row?: number;
+
+	@IsInt({ each: true })
+	@Transform((hallId) => Number(hallId))
+	hallId?: number;
+}

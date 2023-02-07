@@ -4,7 +4,7 @@ import { Transaction } from 'sequelize';
 
 import { RoleService } from '../../role/domain/role.service';
 
-import { UserDto } from '../presentation/user.dto';
+import { UserDto, UserOptions } from '../presentation/user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -14,18 +14,22 @@ export class UserService {
 		private roleService: RoleService,
 	) {}
 
-	public async findAll(options: any): Promise<User[]> {
-		return await this.userRepository.findAll({
+	public async findAll(options: UserOptions): Promise<User[]> {
+		const suitableUsers = await this.userRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableUsers;
 	}
 
-	public async findBy(options: any): Promise<User> {
-		return await this.userRepository.findOne({
+	public async findBy(options: UserOptions): Promise<User> {
+		const suitableUser = await this.userRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableUser;
 	}
 
 	public async create(
@@ -38,16 +42,18 @@ export class UserService {
 			throw new BadRequestException('Such email is already in use');
 		}
 
-		const user = await this.userRepository.create(userDto, { transaction });
+		const createdUser = await this.userRepository.create(userDto, {
+			transaction,
+		});
 		const role = await this.roleService.findBy({ name: 'USER' });
 
 		if (!role) {
 			throw new BadRequestException('This role does not exist.');
 		}
 
-		await user.$set('roles', [role.id], { transaction });
-		user.roles = [role];
+		await createdUser.$set('roles', [role.id], { transaction });
+		createdUser.roles = [role];
 
-		return user;
+		return createdUser;
 	}
 }

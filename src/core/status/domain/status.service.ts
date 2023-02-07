@@ -1,25 +1,29 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { StatusDto } from '../presentation/status.dto';
+import { StatusDto, StatusOptions } from '../presentation/status.dto';
 import { Status } from './status.entity';
 
 @Injectable()
 export class StatusService {
 	constructor(@InjectModel(Status) private statusRepository: typeof Status) {}
 
-	public async findAll(options: any): Promise<Status[]> {
-		return await this.statusRepository.findAll({
+	public async findAll(options: StatusOptions): Promise<Status[]> {
+		const suitableStatuses = await this.statusRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableStatuses;
 	}
 
-	public async findBy(options: any): Promise<Status> {
-		return await this.statusRepository.findOne({
+	public async findBy(options: StatusOptions): Promise<Status> {
+		const suitableStatus = await this.statusRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableStatus;
 	}
 
 	public async create(statusDto: StatusDto): Promise<Status> {
@@ -29,7 +33,9 @@ export class StatusService {
 			throw new BadRequestException('Such status has already exist');
 		}
 
-		return await this.statusRepository.create(statusDto);
+		const createdStatus = await this.statusRepository.create(statusDto);
+
+		return createdStatus;
 	}
 
 	public async update(id: number, statusDto: StatusDto): Promise<Status> {
@@ -47,10 +53,16 @@ export class StatusService {
 
 		await this.statusRepository.update(statusDto, { where: { id } });
 
-		return await this.findBy({ id: id });
+		const updatedStatus = await this.findBy({ id: id });
+
+		return updatedStatus;
 	}
 
-	public async delete(id: string): Promise<any> {
-		return await this.statusRepository.destroy({ where: { id } });
+	public async delete(id: string): Promise<number> {
+		const numberOfDeletedRows = await this.statusRepository.destroy({
+			where: { id },
+		});
+
+		return numberOfDeletedRows;
 	}
 }

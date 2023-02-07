@@ -1,9 +1,9 @@
 import {
-	IsEmail,
 	IsString,
 	IsNotEmpty,
 	MaxLength,
 	IsNumber,
+	IsInt,
 } from 'class-validator';
 
 export class MovieDto {
@@ -18,4 +18,19 @@ export class MovieDto {
 	@IsNotEmpty()
 	@IsNumber()
 	duuration: number;
+}
+
+export class MovieOptions {
+	@IsInt()
+	id?: number;
+
+	@MaxLength(255)
+	@IsString()
+	name?: string;
+
+	@IsString()
+	discription?: string;
+
+	@IsNumber()
+	duuration?: number;
 }

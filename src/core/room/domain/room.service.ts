@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
 import { UserService } from 'src/core/user/domain/user.service';
+import { RoomOptions } from '../presentation/room.dto';
 
 import { Room } from './room.entity';
 
@@ -12,18 +13,22 @@ export class RoomService {
 		readonly userService: UserService,
 	) {}
 
-	public async findAll(options: any): Promise<Room[]> {
-		return await this.roomRepository.findAll({
+	public async findAll(options: RoomOptions): Promise<Room[]> {
+		const suitableRooms = await this.roomRepository.findAll({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableRooms;
 	}
 
-	public async findBy(options: any): Promise<Room> {
-		return await this.roomRepository.findOne({
+	public async findBy(options: RoomOptions): Promise<Room> {
+		const suitableRoom = await this.roomRepository.findOne({
 			where: { ...options },
 			include: { all: true },
 		});
+
+		return suitableRoom;
 	}
 
 	// public async create(
