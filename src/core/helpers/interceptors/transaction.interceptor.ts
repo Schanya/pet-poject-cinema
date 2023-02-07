@@ -1,10 +1,12 @@
 import {
 	CallHandler,
 	ExecutionContext,
+	HttpStatus,
 	Inject,
 	Injectable,
 	NestInterceptor,
 } from '@nestjs/common';
+import { HttpException } from '@nestjs/common/exceptions';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Transaction } from 'sequelize';
@@ -33,7 +35,14 @@ export class TransactionInterceptor implements NestInterceptor {
 			}),
 			catchError(async (err) => {
 				await transaction.rollback();
-				throw Error(err);
+				const message =
+					err instanceof HttpException ? err.message : 'Transaction rolback';
+				const status =
+					err instanceof HttpException
+						? err.getStatus()
+						: HttpStatus.INTERNAL_SERVER_ERROR;
+
+				throw new HttpException(message, status);
 			}),
 		);
 	}
