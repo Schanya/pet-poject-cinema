@@ -35,6 +35,6 @@ export class Room extends Model<Room, RoomCreationAttrs> {
 	@Column({ type: DataType.INTEGER })
 	movieId: number;
 
-	@BelongsToMany(() => User, 'users_rooms', 'user_id', 'room_id')
+	@BelongsToMany(() => User, 'users_rooms', 'room_id', 'user_id')
 	users: User[];
 }
