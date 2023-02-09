@@ -3,7 +3,9 @@ import {
 	Controller,
 	Get,
 	HttpStatus,
+	Param,
 	Post,
+	Delete,
 	Req,
 	Res,
 	UseGuards,
@@ -40,7 +42,45 @@ export class RoomController {
 		@Req() req,
 		@TransactionParam() transaction: Transaction,
 	) {
-		//const room = await this.roomService.create(roomDto, userId, transaction);
-		//res.status(HttpStatus.OK).send(`Room ${room.name} created successfully`);
+		const room = await this.roomService.create(
+			roomDto,
+			req.user.id,
+			transaction,
+		);
+		res.status(HttpStatus.OK).send(`Room ${room.name} created successfully`);
+	}
+
+	@Roles('USER', 'ADMIN')
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@UseInterceptors(TransactionInterceptor)
+	@Post('/connection/:id')
+	async connection(
+		@Param('id') roomId: number,
+		@Res() res: Response,
+		@Req() req,
+		@TransactionParam() transaction: Transaction,
+	) {
+		await this.roomService.connection(req.user.id, transaction, roomId);
+
+		res
+			.status(HttpStatus.OK)
+			.send(`You have successfully connected to the room`);
+	}
+
+	@Roles('USER', 'ADMIN')
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	@UseInterceptors(TransactionInterceptor)
+	@Delete('/disconnection/:id')
+	async disconnection(
+		@Param('id') roomId: number,
+		@Res() res: Response,
+		@Req() req,
+		@TransactionParam() transaction: Transaction,
+	) {
+		await this.roomService.disconnection(req.user.id, transaction, roomId);
+
+		res
+			.status(HttpStatus.OK)
+			.send(`You have successfully disconnected to the room`);
 	}
 }

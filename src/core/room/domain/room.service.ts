@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Transaction } from 'sequelize';
 
 import { UserService } from 'src/core/user/domain/user.service';
-import { RoomOptions } from '../presentation/room.dto';
+import { RoomDto, RoomOptions } from '../presentation/room.dto';
 
 import { Room } from './room.entity';
 
@@ -31,31 +32,99 @@ export class RoomService {
 		return suitableRoom;
 	}
 
-	// public async create(
-	// 	roomDto: RoomDto,
-	// 	userId: number,
-	// 	transaction: Transaction,
-	// ): Promise<Room> {
-	// 	const hasUserRoom = await this.userToRoomRepository.findOne({
-	// 		where: { userId: userId },
-	// 	});
+	public async create(
+		roomDto: RoomDto,
+		userId: number,
+		transaction: Transaction,
+	): Promise<Room> {
+		const user = await this.userService.findBy({ id: userId });
 
-	// 	if (hasUserRoom) {
-	// 		throw new BadRequestException('User is already in the room');
-	// 	}
+		const hasUserRoom = await user.$get('rooms', { transaction });
 
-	// 	const existingRoom = await this.findBy({ name: roomDto.name });
+		if (hasUserRoom.length) {
+			throw new BadRequestException('User is already in the room');
+		}
 
-	// 	if (existingRoom) {
-	// 		throw new BadRequestException('Such room has already exist');
-	// 	}
+		const existingRoom = await this.findBy({ name: roomDto.name });
 
-	// 	const room = await this.roomRepository.create(roomDto, { transaction });
+		if (existingRoom) {
+			throw new BadRequestException('Such room has already exist');
+		}
 
-	// 	const user = await this.userService.findBy({ id: userId });
+		const createdRoom = await this.roomRepository.create(roomDto, {
+			transaction,
+		});
 
-	// 	//user.$set('rooms', room);
+		await user.$set('rooms', createdRoom, { transaction });
 
-	// 	return;
-	// }
+		return createdRoom;
+	}
+
+	public async connection(
+		userId: number,
+		transaction: Transaction,
+		roomId: number,
+	): Promise<unknown> {
+		const user = await this.userService.findBy({ id: userId });
+
+		const hasUserRoom = await user.$get('rooms', { transaction });
+
+		if (hasUserRoom.length) {
+			throw new BadRequestException('User is already in the room');
+		}
+
+		const existingRoom = await this.findBy({ id: roomId });
+
+		if (!existingRoom) {
+			throw new BadRequestException('Such room has not exist');
+		}
+
+		const numberOfUsers = await existingRoom.$get('users', { transaction });
+
+		if (numberOfUsers.length == existingRoom.numberOfUsers) {
+			throw new BadRequestException('There are no seats in the room');
+		}
+
+		const result = await user.$add('rooms', existingRoom, { transaction });
+
+		return result;
+	}
+
+	public async disconnection(
+		userId: number,
+		transaction: Transaction,
+		roomId: number,
+	) {
+		const user = await this.userService.findBy({ id: userId });
+
+		const hasUserRoom = await user.$get('rooms', { transaction });
+
+		if (!hasUserRoom.length) {
+			throw new BadRequestException('User is already in the room');
+		}
+
+		const existingRoom = await this.findBy({ id: roomId });
+
+		if (!existingRoom) {
+			throw new BadRequestException('Such room has not exist');
+		}
+
+		const numberOfUsers = await existingRoom.$get('users', { transaction });
+
+		if (numberOfUsers.length == 1) {
+			await this.delete(existingRoom.id);
+		}
+
+		const result = await user.$remove('rooms', existingRoom, { transaction });
+
+		return result;
+	}
+
+	public async delete(id: number): Promise<number> {
+		const numberDeletedRows = await this.roomRepository.destroy({
+			where: { id },
+		});
+
+		return numberDeletedRows;
+	}
 }
