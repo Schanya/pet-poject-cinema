@@ -12,9 +12,13 @@ import { StatusModule } from './status/status.module';
 import { RequestedSeatModule } from './requested-seat/requested-seat.module';
 import { RoomModule } from './room/room.module';
 import { BasketModule } from './basket/basket.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
 	imports: [
+		MulterModule.register({
+			dest: './uploads',
+		}),
 		UserModule,
 		AuthModule,
 		RoleModule,
