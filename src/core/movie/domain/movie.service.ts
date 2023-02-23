@@ -4,6 +4,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { MovieDto, MovieOptions } from '../presentation/movie.dto';
 import { Movie } from './movie.entity';
 
+import * as fs from 'fs';
+
 @Injectable()
 export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
@@ -26,17 +28,21 @@ export class MovieService {
 		return suitableMovie;
 	}
 
-	public async create(movieDto: MovieDto): Promise<Movie> {
+	public async create(movieDto: MovieDto, filePath: string): Promise<Movie> {
 		const existingMovie = await this.findBy({ name: movieDto.name });
 
 		if (existingMovie) {
 			throw new BadRequestException('Such movie has already exist');
 		}
 
-		return await this.movieRepository.create(movieDto);
+		return await this.movieRepository.create({ ...movieDto, url: filePath });
 	}
 
-	public async update(id: number, movieDto: MovieDto): Promise<Movie> {
+	public async update(
+		id: number,
+		movieDto: MovieDto,
+		filePath?: string,
+	): Promise<Movie> {
 		const movie = await this.findBy({ id: id });
 
 		if (!movie) {
@@ -49,14 +55,27 @@ export class MovieService {
 			throw new BadRequestException('Such movie has already exist');
 		}
 
-		await this.movieRepository.update(movieDto, { where: { id } });
+		if (fs.existsSync(movie.url)) {
+			fs.unlink(movie.url, () => {});
+		}
+
+		await this.movieRepository.update(
+			{ ...movieDto, url: filePath },
+			{ where: { id } },
+		);
 
 		const updatedMovie = await this.findBy({ id: id });
 
 		return updatedMovie;
 	}
 
-	public async delete(id: string): Promise<number> {
+	public async delete(id: number): Promise<number> {
+		const movie = await this.findBy({ id: id });
+
+		if (fs.existsSync(movie.url)) {
+			fs.unlink(movie.url, () => {});
+		}
+
 		const numberDeletedRows = await this.movieRepository.destroy({
 			where: { id },
 		});

@@ -7,7 +7,7 @@ import {
 	NestInterceptor,
 } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Transaction } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
