@@ -8,12 +8,14 @@ import {
 	Post,
 	Put,
 	Res,
+	StreamableFile,
 	UploadedFile,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { createReadStream } from 'fs';
 import { MulterUtils } from 'src/configs/multer-module-options.config';
 import { UploadTypesEnum } from 'src/core/helpers/upload-types.enum';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
@@ -25,6 +27,26 @@ import { MovieDto } from '../presentation/movie.dto';
 @Controller('movie')
 export class MovieController {
 	constructor(readonly movieService: MovieService) {}
+
+	@Get('/getFile')
+	redirect(@Res() res: Response) {
+		return res.redirect('/index.html');
+	}
+
+	@Get('/file/:id')
+	async getFile(
+		@Res({ passthrough: true }) res: Response,
+		@Param('id') id: number,
+	): Promise<StreamableFile> {
+		const suitableMovie = await this.movieService.findBy({ id });
+
+		const file = createReadStream(suitableMovie.url);
+		res.set({
+			'Content-Type': 'video/mp4',
+			'Content-Disposition': 'attachment; filename="video.mp4"',
+		});
+		return new StreamableFile(file);
+	}
 
 	@Get()
 	async getAll(@Res() res: Response) {

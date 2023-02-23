@@ -11,7 +11,6 @@ export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
 
 	public async findAll(options: MovieOptions): Promise<Movie[]> {
-		const files = [];
 		const suitableMovies = await this.movieRepository.findAll({
 			where: { ...options },
 			include: { all: true },
@@ -25,8 +24,6 @@ export class MovieService {
 			where: { ...options },
 			include: { all: true },
 		});
-
-		const file = fs.readFileSync(suitableMovie.url);
 
 		return suitableMovie;
 	}
