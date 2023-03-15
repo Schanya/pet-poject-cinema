@@ -4,6 +4,7 @@ import {
 	IsNotEmpty,
 	MaxLength,
 	IsInt,
+	IsOptional,
 } from 'class-validator';
 
 export class HallDto {
@@ -14,9 +15,11 @@ export class HallDto {
 }
 
 export class HallOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
+	@IsOptional()
 	@MaxLength(255)
 	@IsString()
 	name?: string;

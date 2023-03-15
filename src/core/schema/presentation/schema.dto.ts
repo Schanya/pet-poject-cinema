@@ -1,5 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsDefined, IsInt } from 'class-validator';
+import {
+	IsNotEmpty,
+	IsNumber,
+	IsDefined,
+	IsInt,
+	IsOptional,
+} from 'class-validator';
 
 export class SchemaDto {
 	@IsNotEmpty()
@@ -29,15 +35,19 @@ export class AddToBasketDto {
 }
 
 export class SchemaOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
+	@IsOptional()
 	@IsNumber()
 	place?: number;
 
+	@IsOptional()
 	@IsNumber()
 	row?: number;
 
+	@IsOptional()
 	@IsInt({ each: true })
 	@Transform((hallId) => Number(hallId))
 	hallId?: number;

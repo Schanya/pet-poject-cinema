@@ -4,6 +4,7 @@ import {
 	MaxLength,
 	IsNumber,
 	IsInt,
+	IsOptional,
 } from 'class-validator';
 
 export class MovieDto {
@@ -12,25 +13,30 @@ export class MovieDto {
 	@IsString()
 	name: string;
 
+	@IsOptional()
 	@IsString()
 	discription?: string;
 
 	@IsNotEmpty()
 	@IsNumber()
-	duuration: number;
+	duration: number;
 }
 
 export class MovieOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
+	@IsOptional()
 	@MaxLength(255)
 	@IsString()
 	name?: string;
 
+	@IsOptional()
 	@IsString()
 	discription?: string;
 
+	@IsOptional()
 	@IsNumber()
-	duuration?: number;
+	duration?: number;
 }

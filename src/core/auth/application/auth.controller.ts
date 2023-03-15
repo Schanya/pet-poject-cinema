@@ -1,21 +1,21 @@
 import {
-	Controller,
-	Post,
 	Body,
+	Controller,
+	HttpStatus,
+	Post,
+	Res,
 	UseGuards,
 	UseInterceptors,
-	Res,
-	HttpStatus,
 } from '@nestjs/common';
 
 import { UserDto } from '../../user/presentation/user.dto';
 import { AuthService } from '../domain/auth.service';
 
-import { LocalAuthGuard } from '../guards';
-import { TransactionInterceptor } from '../../helpers/interceptors';
-import { TransactionParam } from '../../helpers/decorators';
-import { Transaction } from 'sequelize';
 import { Response } from 'express';
+import { Transaction } from 'sequelize';
+import { TransactionParam } from '../../helpers/decorators';
+import { TransactionInterceptor } from '../../helpers/interceptors';
+import { LocalAuthGuard } from '../guards';
 
 @Controller('auth')
 export class AuthController {
