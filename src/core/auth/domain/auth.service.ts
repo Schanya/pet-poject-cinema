@@ -7,10 +7,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Transaction } from 'sequelize';
 
-import { hash, compare } from '../../helpers/hash';
-import { UserDto } from '../../user/presentation/user.dto';
+import { compare, hash } from '../../helpers/hash';
 import { User } from '../../user/domain/user.entity';
 import { UserService } from '../../user/domain/user.service';
+import { UserDto } from '../../user/presentation/user.dto';
 
 @Injectable()
 export class AuthService {

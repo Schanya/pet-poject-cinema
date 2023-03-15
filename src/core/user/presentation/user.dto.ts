@@ -4,6 +4,7 @@ import {
 	IsNotEmpty,
 	MaxLength,
 	IsInt,
+	IsOptional,
 } from 'class-validator';
 
 export class UserDto {
@@ -19,14 +20,17 @@ export class UserDto {
 }
 
 export class UserOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
+	@IsOptional()
 	@MaxLength(255)
 	@IsEmail()
 	@IsString()
 	email?: string;
 
+	@IsOptional()
 	@IsNotEmpty()
 	@IsString()
 	password?: string;

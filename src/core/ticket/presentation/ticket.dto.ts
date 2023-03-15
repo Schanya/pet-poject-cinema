@@ -1,5 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsDefined, IsInt } from 'class-validator';
+import {
+	IsNotEmpty,
+	IsNumber,
+	IsDefined,
+	IsInt,
+	IsOptional,
+} from 'class-validator';
 
 export class TicketDto {
 	@IsDefined()
@@ -14,13 +20,16 @@ export class TicketDto {
 }
 
 export class TicketOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
+	@IsOptional()
 	@IsInt({ each: true })
 	@Transform((schemaId) => Number(schemaId))
 	schemaId?: number;
 
+	@IsOptional()
 	@IsInt({ each: true })
 	@Transform((scheduleId) => Number(scheduleId))
 	scheduleId?: number;

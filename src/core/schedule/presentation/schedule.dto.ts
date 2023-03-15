@@ -1,12 +1,15 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsDefined, IsInt, IsDate } from 'class-validator';
+import {
+	IsNotEmpty,
+	IsDefined,
+	IsInt,
+	IsDate,
+	IsOptional,
+} from 'class-validator';
 
 export class ScheduleDto {
 	@IsNotEmpty()
-	@Transform(({ value }) => {
-		value = value.split(' ').join('T') + '+0000';
-		return new Date(value);
-	})
+	@Transform(({ value }) => new Date(value))
 	@IsDate()
 	date: Date;
 
@@ -22,20 +25,21 @@ export class ScheduleDto {
 }
 
 export class ScheduleOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
-	@Transform(({ value }) => {
-		value = value.split(' ').join('T') + '+0000';
-		return new Date(value);
-	})
+	@IsOptional()
+	@Transform(({ value }) => new Date(value))
 	@IsDate()
 	date?: Date;
 
+	@IsOptional()
 	@IsInt({ each: true })
 	@Transform((movieId) => Number(movieId))
 	movieId?: number;
 
+	@IsOptional()
 	@IsInt({ each: true })
 	@Transform((hallId) => Number(hallId))
 	hallId?: number;

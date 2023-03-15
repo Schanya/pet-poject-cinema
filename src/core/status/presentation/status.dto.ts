@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+	IsInt,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	MaxLength,
+} from 'class-validator';
 
 export class StatusDto {
 	@IsNotEmpty()
@@ -8,9 +14,11 @@ export class StatusDto {
 }
 
 export class StatusOptions {
+	@IsOptional()
 	@IsInt()
 	id?: number;
 
+	@IsOptional()
 	@MaxLength(255)
 	@IsString()
 	name?: string;
