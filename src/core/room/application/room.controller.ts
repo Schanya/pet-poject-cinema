@@ -1,22 +1,23 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
+	HttpCode,
 	HttpStatus,
 	Param,
 	Post,
-	Delete,
 	Req,
-	Res,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { Transaction } from 'sequelize';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 
 import { TransactionInterceptor } from 'src/core/helpers/interceptors';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
 import { Roles, TransactionParam } from '../../helpers/decorators';
+import { Room } from '../domain/room.entity';
 
 import { RoomService } from '../domain/room.service';
 import { RoomDto } from '../presentation/room.dto';
@@ -25,20 +26,24 @@ import { RoomDto } from '../presentation/room.dto';
 export class RoomController {
 	constructor(readonly roomService: RoomService) {}
 
+	@HttpCode(HttpStatus.OK)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<Room>> {
 		const rooms = await this.roomService.findAll({});
 
-		res.status(HttpStatus.OK).send(rooms);
+		return {
+			totalRecordsNumber: rooms.totalRecordsNumber,
+			entities: rooms.entities,
+		};
 	}
 
 	@Roles('USER', 'ADMIN')
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@UseInterceptors(TransactionInterceptor)
+	@HttpCode(HttpStatus.OK)
 	@Post()
 	async create(
 		@Body() roomDto: RoomDto,
-		@Res() res: Response,
 		@Req() req,
 		@TransactionParam() transaction: Transaction,
 	) {
@@ -47,40 +52,37 @@ export class RoomController {
 			req.user.id,
 			transaction,
 		);
-		res.status(HttpStatus.OK).send(`Room ${room.name} created successfully`);
+
+		return room;
 	}
 
 	@Roles('USER', 'ADMIN')
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@UseInterceptors(TransactionInterceptor)
+	@HttpCode(HttpStatus.OK)
 	@Post('/connection/:id')
 	async connection(
 		@Param('id') roomId: number,
-		@Res() res: Response,
 		@Req() req,
 		@TransactionParam() transaction: Transaction,
 	) {
 		await this.roomService.connection(req.user.id, transaction, roomId);
 
-		res
-			.status(HttpStatus.OK)
-			.send(`You have successfully connected to the room`);
+		return `You have successfully connected to the room`;
 	}
 
 	@Roles('USER', 'ADMIN')
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@UseInterceptors(TransactionInterceptor)
+	@HttpCode(HttpStatus.OK)
 	@Delete('/disconnection/:id')
 	async disconnection(
 		@Param('id') roomId: number,
-		@Res() res: Response,
 		@Req() req,
 		@TransactionParam() transaction: Transaction,
 	) {
 		await this.roomService.disconnection(req.user.id, transaction, roomId);
 
-		res
-			.status(HttpStatus.OK)
-			.send(`You have successfully disconnected to the room`);
+		return `You have successfully disconnected to the room`;
 	}
 }

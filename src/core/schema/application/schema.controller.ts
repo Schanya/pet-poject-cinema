@@ -3,22 +3,23 @@ import {
 	Controller,
 	Delete,
 	Get,
+	HttpCode,
 	HttpStatus,
 	Param,
 	Post,
 	Put,
 	Request,
-	Res,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { Transaction } from 'sequelize';
 
-import { TransactionInterceptor } from 'src/core/helpers/interceptors';
-import { Roles, TransactionParam } from 'src/core/helpers/decorators';
 import { JwtAuthGuard, RolesGuard } from 'src/core/auth/guards';
+import { Roles, TransactionParam } from 'src/core/helpers/decorators';
+import { TransactionInterceptor } from 'src/core/helpers/interceptors';
 
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
+import { Schema } from '../domain/schema.entity';
 import { SchemaService } from '../domain/schema.service';
 import { AddToBasketDto, SchemaDto } from '../presentation/schema.dto';
 
@@ -29,9 +30,9 @@ export class SchemaController {
 	@Roles('USER', 'ADMIN')
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	@UseInterceptors(TransactionInterceptor)
+	@HttpCode(HttpStatus.OK)
 	@Post('add-to-basket')
 	async addToBasket(
-		@Res() res: Response,
 		@Request() req,
 		@Body() addToBasketDto: AddToBasketDto,
 		@TransactionParam() transaction: Transaction,
@@ -41,44 +42,42 @@ export class SchemaController {
 			req.user.id,
 			transaction,
 		);
-		res
-			.status(HttpStatus.OK)
-			.send({ message: 'Tickets added to cart', tikets });
+
+		return tikets;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<Schema>> {
 		const schemas = await this.schemaService.findAll({});
 
-		res.status(HttpStatus.OK).send(schemas);
+		return {
+			totalRecordsNumber: schemas.totalRecordsNumber,
+			entities: schemas.entities,
+		};
 	}
 
+	@HttpCode(HttpStatus.CREATED)
 	@Post()
-	async create(@Body() schemaDto: SchemaDto, @Res() res: Response) {
+	async create(@Body() schemaDto: SchemaDto) {
 		const schema = await this.schemaService.create(schemaDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send({ message: 'Schema created successfully', schema });
+		return schema;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Put(':id')
-	async update(
-		@Param('id') id: number,
-		@Body() schemaDto: SchemaDto,
-		@Res() res: Response,
-	) {
+	async update(@Param('id') id: number, @Body() schemaDto: SchemaDto) {
 		const updatedSchema = await this.schemaService.update(id, schemaDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send({ message: 'Schema updated successfully', updatedSchema });
+		return updatedSchema;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Delete(':id')
-	async delete(@Param('id') id: string, @Res() res: Response) {
+	async delete(@Param('id') id: string) {
 		await this.schemaService.delete(id);
 
-		res.status(HttpStatus.OK).send({ message: 'Schema deleted successfully' });
+		return 'Schema deleted successfully';
 	}
 }

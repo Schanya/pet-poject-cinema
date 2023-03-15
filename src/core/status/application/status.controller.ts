@@ -3,17 +3,18 @@ import {
 	Controller,
 	Delete,
 	Get,
+	HttpCode,
 	HttpStatus,
 	Param,
 	Post,
 	Put,
-	Res,
 	UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
 import { Roles } from '../../helpers/decorators';
+import { Status } from '../domain/status.entity';
 
 import { StatusService } from '../domain/status.service';
 import { StatusDto } from '../presentation/status.dto';
@@ -24,39 +25,38 @@ import { StatusDto } from '../presentation/status.dto';
 export class StatusController {
 	constructor(readonly statusService: StatusService) {}
 
+	@HttpCode(HttpStatus.OK)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<Status>> {
 		const statuses = await this.statusService.findAll({});
 
-		res.status(HttpStatus.OK).send(statuses);
+		return {
+			totalRecordsNumber: statuses.totalRecordsNumber,
+			entities: statuses.entities,
+		};
 	}
 
+	@HttpCode(HttpStatus.CREATED)
 	@Post()
-	async create(@Body() statusDto: StatusDto, @Res() res: Response) {
+	async create(@Body() statusDto: StatusDto) {
 		const status = await this.statusService.create(statusDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send(`Status ${status.name} created successfully`);
+		return status;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Put(':id')
-	async update(
-		@Param('id') id: number,
-		@Body() statusDto: StatusDto,
-		@Res() res: Response,
-	) {
+	async update(@Param('id') id: number, @Body() statusDto: StatusDto) {
 		const updatedStatus = await this.statusService.update(id, statusDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send(`Status ${updatedStatus.name} updated successfully`);
+		return updatedStatus;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Delete(':id')
-	async delete(@Param('id') id: string, @Res() res: Response) {
+	async delete(@Param('id') id: string) {
 		await this.statusService.delete(id);
 
-		res.status(HttpStatus.OK).send(`Status deleted successfully`);
+		return `Status deleted successfully`;
 	}
 }

@@ -3,13 +3,14 @@ import {
 	Controller,
 	Delete,
 	Get,
+	HttpCode,
 	HttpStatus,
 	Param,
 	Post,
 	Put,
-	Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
+import { Schedule } from '../domain/schedule.entity';
 
 import { ScheduleService } from '../domain/schedule.service';
 import { ScheduleDto } from '../presentation/schedule.dto';
@@ -18,39 +19,38 @@ import { ScheduleDto } from '../presentation/schedule.dto';
 export class ScheduleController {
 	constructor(readonly scheduleService: ScheduleService) {}
 
+	@HttpCode(HttpStatus.OK)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<Schedule>> {
 		const schedules = await this.scheduleService.findAll({});
 
-		res.status(HttpStatus.OK).send(schedules);
+		return {
+			totalRecordsNumber: schedules.totalRecordsNumber,
+			entities: schedules.entities,
+		};
 	}
 
+	@HttpCode(HttpStatus.CREATED)
 	@Post()
-	async create(@Body() scheduleDto: ScheduleDto, @Res() res: Response) {
+	async create(@Body() scheduleDto: ScheduleDto) {
 		const schedule = await this.scheduleService.create(scheduleDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send({ mesage: `Schedule created successfully`, schedule });
+		return schedule;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Put(':id')
-	async update(
-		@Param('id') id: number,
-		@Body() scheduleDto: ScheduleDto,
-		@Res() res: Response,
-	) {
+	async update(@Param('id') id: number, @Body() scheduleDto: ScheduleDto) {
 		const updatedSchedule = await this.scheduleService.update(id, scheduleDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send({ mesage: `Schedule updated successfully`, updatedSchedule });
+		return updatedSchedule;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Delete(':id')
-	async delete(@Param('id') id: string, @Res() res: Response) {
+	async delete(@Param('id') id: string) {
 		await this.scheduleService.delete(id);
 
-		res.status(HttpStatus.OK).send({ mesage: `Schedule deleted successfully` });
+		return `Schedule deleted successfully`;
 	}
 }

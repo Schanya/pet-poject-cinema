@@ -3,13 +3,15 @@ import {
 	Controller,
 	Delete,
 	Get,
+	HttpCode,
 	HttpStatus,
 	Param,
 	Post,
 	Put,
-	Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
+import { Ticket } from '../domain/ticket.entity';
 
 import { TicketService } from '../domain/ticket.service';
 import { TicketDto } from '../presentation/ticket.dto';
@@ -18,39 +20,38 @@ import { TicketDto } from '../presentation/ticket.dto';
 export class TicketController {
 	constructor(readonly ticketService: TicketService) {}
 
+	@HttpCode(HttpStatus.OK)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<Ticket>> {
 		const tickets = await this.ticketService.findAll({});
 
-		res.status(HttpStatus.OK).send(tickets);
+		return {
+			totalRecordsNumber: tickets.totalRecordsNumber,
+			entities: tickets.entities,
+		};
 	}
 
+	@HttpCode(HttpStatus.CREATED)
 	@Post()
-	async create(@Body() ticketDto: TicketDto, @Res() res: Response) {
+	async create(@Body() ticketDto: TicketDto) {
 		const ticket = await this.ticketService.create(ticketDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send({ message: 'Ticket created successfully', ticket });
+		return ticket;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Put(':id')
-	async update(
-		@Param('id') id: number,
-		@Body() ticketDto: TicketDto,
-		@Res() res: Response,
-	) {
+	async update(@Param('id') id: number, @Body() ticketDto: TicketDto) {
 		const updatedTicket = await this.ticketService.update(id, ticketDto);
 
-		res
-			.status(HttpStatus.OK)
-			.send({ message: 'Ticket created successfully', updatedTicket });
+		return updatedTicket;
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Delete(':id')
-	async delete(@Param('id') id: string, @Res() res: Response) {
+	async delete(@Param('id') id: string) {
 		await this.ticketService.delete(id);
 
-		res.status(HttpStatus.OK).send({ message: 'Ticket deleted successfully' });
+		return 'Ticket deleted successfully';
 	}
 }

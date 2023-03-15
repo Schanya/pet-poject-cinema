@@ -1,11 +1,5 @@
 import { Transform } from 'class-transformer';
-import {
-	IsNotEmpty,
-	IsNumber,
-	IsDefined,
-	IsInt,
-	IsOptional,
-} from 'class-validator';
+import { IsDefined, IsInt, IsOptional } from 'class-validator';
 
 export class TicketDto {
 	@IsDefined()

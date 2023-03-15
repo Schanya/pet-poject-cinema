@@ -1,24 +1,24 @@
-import {
-	BadRequestException,
-	Injectable,
-	UseInterceptors,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { Hall } from './hall.entity';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 import { HallDto, HallOptions } from '../presentation/hall.dto';
+import { Hall } from './hall.entity';
 
 @Injectable()
 export class HallService {
 	constructor(@InjectModel(Hall) private hallRepository: typeof Hall) {}
 
-	public async findAll(options: HallOptions): Promise<Hall[]> {
-		const suitableHalls = await this.hallRepository.findAll({
+	public async findAll(options: HallOptions): Promise<ReadAllResult<Hall>> {
+		const { count, rows } = await this.hallRepository.findAndCountAll({
 			where: { ...options },
 			include: { all: true },
 		});
 
-		return suitableHalls;
+		return {
+			totalRecordsNumber: count,
+			entities: rows,
+		};
 	}
 
 	public async findBy(options: HallOptions): Promise<Hall> {
