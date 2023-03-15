@@ -4,19 +4,20 @@ import { Transaction } from 'sequelize';
 
 import { UserService } from 'src/core/user/domain/user.service';
 import { RequestedSeatService } from '../../requested-seat/domain/requested-seat.service';
-import { TicketService } from '../../ticket/domain/ticket.service';
 import { StatusService } from '../../status/domain/status.service';
+import { TicketService } from '../../ticket/domain/ticket.service';
 
-import { Schema } from './schema.entity';
-import { Ticket } from 'src/core/ticket/domain/ticket.entity';
 import { RequestedSeat } from 'src/core/requested-seat/domain/requested-seat.entity';
+import { Ticket } from 'src/core/ticket/domain/ticket.entity';
+import { Schema } from './schema.entity';
 
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
+import { BasketService } from 'src/core/basket/domain/basket.service';
 import {
 	AddToBasketDto,
 	SchemaDto,
 	SchemaOptions,
 } from '../presentation/schema.dto';
-import { BasketService } from 'src/core/basket/domain/basket.service';
 
 @Injectable()
 export class SchemaService {
@@ -86,13 +87,16 @@ export class SchemaService {
 		return suitableSchema;
 	}
 
-	public async findAll(options: SchemaOptions): Promise<Schema[]> {
-		const suitableSchemas = await this.schemaRepository.findAll({
+	public async findAll(options: SchemaOptions): Promise<ReadAllResult<Schema>> {
+		const { count, rows } = await this.schemaRepository.findAndCountAll({
 			where: { ...options },
 			include: { all: true },
 		});
 
-		return suitableSchemas;
+		return {
+			totalRecordsNumber: count,
+			entities: rows,
+		};
 	}
 
 	public async findBy(options: SchemaOptions): Promise<Schema> {

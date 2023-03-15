@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 
 import { TicketDto, TicketOptions } from '../presentation/ticket.dto';
 import { Ticket } from './ticket.entity';
@@ -8,13 +9,16 @@ import { Ticket } from './ticket.entity';
 export class TicketService {
 	constructor(@InjectModel(Ticket) private ticketRepository: typeof Ticket) {}
 
-	public async findAll(options: TicketOptions): Promise<Ticket[]> {
-		const suitableTickets = await this.ticketRepository.findAll({
+	public async findAll(options: TicketOptions): Promise<ReadAllResult<Ticket>> {
+		const { count, rows } = await this.ticketRepository.findAndCountAll({
 			where: { ...options },
 			include: { all: true },
 		});
 
-		return suitableTickets;
+		return {
+			totalRecordsNumber: count,
+			entities: rows,
+		};
 	}
 
 	public async findBy(options: TicketOptions): Promise<Ticket> {

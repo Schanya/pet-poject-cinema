@@ -1,9 +1,10 @@
-import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 
 import { JwtAuthGuard } from '../../auth/guards';
 
 import { UserService } from '../../user/domain/user.service';
+import { User } from '../domain/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -11,9 +12,12 @@ export class UserController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<User>> {
 		const users = await this.userService.findAll({});
 
-		res.status(HttpStatus.OK).send(users);
+		return {
+			totalRecordsNumber: users.totalRecordsNumber,
+			entities: users.entities,
+		};
 	}
 }

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Transaction } from 'sequelize';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 
 import { RoleService } from '../../role/domain/role.service';
 
@@ -14,13 +15,16 @@ export class UserService {
 		private roleService: RoleService,
 	) {}
 
-	public async findAll(options: UserOptions): Promise<User[]> {
-		const suitableUsers = await this.userRepository.findAll({
+	public async findAll(options: UserOptions): Promise<ReadAllResult<User>> {
+		const { count, rows } = await this.userRepository.findAndCountAll({
 			where: { ...options },
 			include: { all: true },
 		});
 
-		return suitableUsers;
+		return {
+			totalRecordsNumber: count,
+			entities: rows,
+		};
 	}
 
 	public async findBy(options: UserOptions): Promise<User> {

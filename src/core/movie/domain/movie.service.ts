@@ -5,18 +5,22 @@ import { MovieDto, MovieOptions } from '../presentation/movie.dto';
 import { Movie } from './movie.entity';
 
 import * as fs from 'fs';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 
 @Injectable()
 export class MovieService {
 	constructor(@InjectModel(Movie) private movieRepository: typeof Movie) {}
 
-	public async findAll(options: MovieOptions): Promise<Movie[]> {
-		const suitableMovies = await this.movieRepository.findAll({
+	public async findAll(options: MovieOptions): Promise<ReadAllResult<Movie>> {
+		const { count, rows } = await this.movieRepository.findAndCountAll({
 			where: { ...options },
 			include: { all: true },
 		});
 
-		return suitableMovies;
+		return {
+			totalRecordsNumber: count,
+			entities: rows,
+		};
 	}
 
 	public async findBy(options: MovieOptions): Promise<Movie> {

@@ -1,10 +1,11 @@
+import { Type } from 'class-transformer';
 import {
-	IsString,
-	IsNotEmpty,
-	MaxLength,
-	IsNumber,
 	IsInt,
+	IsNotEmpty,
+	IsNumber,
 	IsOptional,
+	IsString,
+	MaxLength,
 } from 'class-validator';
 
 export class MovieDto {
@@ -19,6 +20,7 @@ export class MovieDto {
 
 	@IsNotEmpty()
 	@IsNumber()
+	@Type(() => Number)
 	duration: number;
 }
 

@@ -3,23 +3,26 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Header,
+	HttpCode,
 	HttpStatus,
 	Param,
 	Post,
 	Put,
-	Res,
+	Redirect,
 	StreamableFile,
 	UploadedFile,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
 import { createReadStream } from 'fs';
+import { ReadAllResult } from 'src/common/types/read-all-result.type';
 import { MulterUtils } from 'src/configs/multer-module-options.config';
 import { UploadTypesEnum } from 'src/core/helpers/upload-types.enum';
 import { JwtAuthGuard, RolesGuard } from '../../auth/guards';
 import { Roles } from '../../helpers/decorators';
+import { Movie } from '../domain/movie.entity';
 
 import { MovieService } from '../domain/movie.service';
 import { MovieDto } from '../presentation/movie.dto';
@@ -29,30 +32,29 @@ export class MovieController {
 	constructor(readonly movieService: MovieService) {}
 
 	@Get('/getFile')
-	redirect(@Res() res: Response) {
-		return res.redirect('/index.html');
-	}
+	@Redirect('/index.html', 301)
+	redirect() {}
 
+	@HttpCode(HttpStatus.OK)
 	@Get('/file/:id')
-	async getFile(
-		@Res({ passthrough: true }) res: Response,
-		@Param('id') id: number,
-	): Promise<StreamableFile> {
+	@Header('Content-Type', 'video/mp4')
+	async getFile(@Param('id') id: number): Promise<StreamableFile> {
 		const suitableMovie = await this.movieService.findBy({ id });
 
 		const file = createReadStream(suitableMovie.url);
-		res.set({
-			'Content-Type': 'video/mp4',
-			'Content-Disposition': 'attachment; filename="video.mp4"',
-		});
+
 		return new StreamableFile(file);
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Get()
-	async getAll(@Res() res: Response) {
+	async getAll(): Promise<ReadAllResult<Movie>> {
 		const movies = await this.movieService.findAll({});
 
-		res.status(HttpStatus.OK).send(movies);
+		return {
+			totalRecordsNumber: movies.totalRecordsNumber,
+			entities: movies.entities,
+		};
 	}
 
 	@Roles('ADMIN')
@@ -60,19 +62,16 @@ export class MovieController {
 	@UseInterceptors(
 		FileInterceptor('file', MulterUtils.getConfig(UploadTypesEnum.VIDEO)),
 	)
+	@HttpCode(HttpStatus.CREATED)
 	@Post()
 	async create(
 		@UploadedFile()
 		file: Express.Multer.File,
 		@Body() movieDto: MovieDto,
-		@Res() res: Response,
 	) {
 		const movie = await this.movieService.create(movieDto, file.path);
 
-		res.status(HttpStatus.OK).send({
-			message: `Movie ${movie.name} created successfully`,
-			file: file.destination,
-		});
+		return movie;
 	}
 
 	@Roles('ADMIN')
@@ -80,12 +79,12 @@ export class MovieController {
 	@UseInterceptors(
 		FileInterceptor('file', MulterUtils.getConfig(UploadTypesEnum.VIDEO)),
 	)
+	@HttpCode(HttpStatus.OK)
 	@Put(':id')
 	async update(
 		@Param('id')
 		id: number,
 		@Body() movieDto: MovieDto,
-		@Res() res: Response,
 		@UploadedFile()
 		file?: Express.Multer.File,
 	) {
@@ -95,17 +94,16 @@ export class MovieController {
 			file.path,
 		);
 
-		res
-			.status(HttpStatus.OK)
-			.send(`Movie ${updatedMovie.name} updated successfully`);
+		return updatedMovie;
 	}
 
 	@Roles('ADMIN')
 	@UseGuards(JwtAuthGuard, RolesGuard)
+	@HttpCode(HttpStatus.OK)
 	@Delete(':id')
-	async delete(@Param('id') id: number, @Res() res: Response) {
+	async delete(@Param('id') id: number) {
 		await this.movieService.delete(id);
 
-		res.status(HttpStatus.OK).send(`Movie deleted successfully`);
+		return `Movie deleted successfully`;
 	}
 }

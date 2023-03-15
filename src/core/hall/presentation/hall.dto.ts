@@ -1,10 +1,9 @@
 import {
-	IsEmail,
-	IsString,
-	IsNotEmpty,
-	MaxLength,
 	IsInt,
+	IsNotEmpty,
 	IsOptional,
+	IsString,
+	MaxLength,
 } from 'class-validator';
 
 export class HallDto {

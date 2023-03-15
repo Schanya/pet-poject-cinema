@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
 	IsDefined,
 	IsInt,
@@ -21,7 +21,7 @@ export class RoomDto {
 
 	@IsDefined()
 	@IsInt({ each: true })
-	@Transform((movieId) => Number(movieId))
+	@Type(() => Number)
 	movieId: number;
 }
 
